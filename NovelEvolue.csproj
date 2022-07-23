@@ -53,13 +53,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Reference Include="HtmlAgilityPack">
+	    <HintPath>..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\bin\Debug\HtmlAgilityPack.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="AppFlyout.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="FlyoutMenuPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Novel\ListeNovel.xaml">
+	  <MauiXaml Update="Novels\ListeNovel.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

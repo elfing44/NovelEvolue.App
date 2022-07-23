@@ -1,4 +1,4 @@
-using NovelEvolue.Novel;
+using NovelEvolue.Novels;
 
 namespace NovelEvolue;
 
