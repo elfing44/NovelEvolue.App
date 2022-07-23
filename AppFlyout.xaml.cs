@@ -1,3 +1,5 @@
+using NovelEvolue.Novel;
+
 namespace NovelEvolue;
 
 public partial class AppFlyout : FlyoutPage
@@ -14,7 +16,7 @@ public partial class AppFlyout : FlyoutPage
         var item = e.CurrentSelection.FirstOrDefault() as FlyoutPageItem;
         if (item != null)
         {
-            Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
+            Detail = new NavigationPage(new ListeNovel(item.SiteType));
             IsPresented = false;
         }
     }

@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NovelEvolue", "NovelEvolue.csproj", "{5E4EAF34-0E4D-4F21-9296-A618CC4B7178}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecuperationDonnee", "RecuperationDonnee\RecuperationDonnee.csproj", "{8BC4E6AE-3323-4089-8E40-B66C2D3B1F37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecuperationDonnee", "..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\RecuperationDonnee.csproj", "{8BC4E6AE-3323-4089-8E40-B66C2D3B1F37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

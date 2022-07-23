@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using RecuperationDonnee;
 
 namespace NovelEvolue;
 
@@ -14,11 +15,11 @@ public partial class FlyoutMenuPage : ContentPage
     {
         ObservableCollection<FlyoutPageItem> listeSite = new ObservableCollection<FlyoutPageItem>()
             {
-                new FlyoutPageItem() { Title = "Xiaowaz" },
-                new FlyoutPageItem() { Title = "Novel de Glace" },
-                new FlyoutPageItem() { Title = "Chireads" },
-                new FlyoutPageItem() { Title = "Harken Eliwood" },
-                new FlyoutPageItem() { Title = "WuxiaLNScantrad" }
+                new FlyoutPageItem() { Title = "Xiaowaz" , SiteType = SiteEnum.Xiaowaz},
+                new FlyoutPageItem() { Title = "Novel de Glace", SiteType = SiteEnum.NovelDeGlace },
+                new FlyoutPageItem() { Title = "Chireads", SiteType = SiteEnum.Chireads },
+                new FlyoutPageItem() { Title = "Harken Eliwood", SiteType = SiteEnum.HarkenEliwwoof },
+                new FlyoutPageItem() { Title = "WuxiaLNScantrad", SiteType = SiteEnum.WuxiaLNScantrad }
             };
         collectionView.ItemsSource = listeSite;
     }
