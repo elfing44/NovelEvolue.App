@@ -12,6 +12,7 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         {
             IEnumerable<Chapitre> listeChapitre = new Xiaowaz().RecuperationListeChapitre(@"https://xiaowaz.fr/series-en-cours/a-monster-who-levels-up/");
             Assert.AreEqual(175, listeChapitre.Count());
+            Assert.AreEqual("MWLU : Prologue", listeChapitre.First().Libelle);
         }
 
         [TestMethod]
@@ -49,7 +50,11 @@ namespace RecuperationDonnee.Xiaowaz.Tests
             Assert.AreEqual(21, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
-                new Xiaowaz().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                IEnumerable<Chapitre> listechapitre = new Xiaowaz().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                foreach (Chapitre chapitre in listechapitre)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                }
             }
         }
 

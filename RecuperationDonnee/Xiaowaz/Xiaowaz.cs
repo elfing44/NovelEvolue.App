@@ -36,7 +36,7 @@ namespace RecuperationDonnee.Xiaowaz
             var listeNodesChapitre = doc.GetElementbyId(_idElementListe);
             if (listeNodesChapitre != null)
             {
-                listeChapitre.AddRange(listeNodesChapitre.ChildNodes.Select(x => x.Element("a")).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.GetAttributeValue("title", string.Empty)), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
+                listeChapitre.AddRange(listeNodesChapitre.ChildNodes.Select(x => x.Element("a")).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
             }
             else
             {
