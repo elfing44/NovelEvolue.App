@@ -4,8 +4,6 @@ using RecuperationDonnee;
 
 namespace NovelEvolue.Chapitre;
 
-public interface IBaseUrl { string Get(); }
-
 public partial class VisualisateurChapitre : ContentPage
 {
     int _indexElement;
