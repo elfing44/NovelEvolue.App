@@ -28,7 +28,15 @@ public partial class SaisieListeChapitre : ContentPage
     {
         if (e.SelectedItem != null)
         {
+            ChapitreView chapitre = (ChapitreView)e.SelectedItem;
+            int index = ListeChapitreView.IndexOf(chapitre);
+            if (string.IsNullOrEmpty(chapitre.Texte))
+            {
+                chapitre.Texte = _site.RecuperationChapitre(chapitre.LienHtml, true);
+            }
 
+            Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, ListeChapitreView, index, _site, _novel)));
+            ListeChapitre.SelectedItem = null;
         }
     }
 
