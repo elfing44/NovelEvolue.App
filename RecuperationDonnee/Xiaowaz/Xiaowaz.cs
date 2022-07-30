@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using HtmlAgilityPack;
 
 namespace RecuperationDonnee.Xiaowaz
@@ -32,12 +31,12 @@ namespace RecuperationDonnee.Xiaowaz
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(lienPagechapitre);
             // Récupération de l'élément qui a pour id : lcp_instance_0 qui contient la liste de tous les chapitres
-            List<Chapitre> listeChapitre = null;
+            List<Chapitre> listeChapitre = new List<Chapitre>();
 
             var listeNodesChapitre = doc.GetElementbyId(_idElementListe);
             if (listeNodesChapitre != null)
             {
-                listeChapitre = listeNodesChapitre.ChildNodes.Select(x => x.Element("a")).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.GetAttributeValue("title", string.Empty)), LientHtml = x.GetAttributeValue("Href", string.Empty) }).ToList();
+                listeChapitre.AddRange(listeNodesChapitre.ChildNodes.Select(x => x.Element("a")).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.GetAttributeValue("title", string.Empty)), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
             }
             else
             {
@@ -45,25 +44,25 @@ namespace RecuperationDonnee.Xiaowaz
 
                 if (test != null)
                 {
-                    listeChapitre = test.Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty && x.GetAttributeValue("rel", string.Empty) == string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).ToList();
+                    listeChapitre.AddRange(test.Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty && x.GetAttributeValue("rel", string.Empty) == string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
                     if (!listeChapitre.Any())
                     {
-                        listeChapitre = test.Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).ToList();
+                        listeChapitre.AddRange(test.Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
                     }
                 }
 
-                if (!listeChapitre.Any())
+                if (!listeChapitre.Any() && doc.GetElementbyId("content").ChildNodes.Elements("div").Select(x => x.Elements("p")).LastOrDefault() != null)
                 {
-                    listeChapitre = doc.GetElementbyId("content").ChildNodes.Elements("div").Select(x => x.Elements("p")).Last().SelectMany(x => x.ChildNodes).Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty && x.GetAttributeValue("rel", string.Empty) == string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).ToList();
+                    listeChapitre.AddRange(doc.GetElementbyId("content").ChildNodes.Elements("div").Select(x => x.Elements("p")).Last().SelectMany(x => x.ChildNodes).Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty && x.GetAttributeValue("rel", string.Empty) == string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }));
                 }
             }
 
-            if (!listeChapitre.Any())
+            if (!listeChapitre.Any() && doc.GetElementbyId("content").ChildNodes.Elements("div").Select(x => x.Elements("p")).LastOrDefault() != null)
             {
                 listeChapitre = doc.GetElementbyId("content").ChildNodes.Elements("div").Select(x => x.Elements("p")).Last().SelectMany(x => x.ChildNodes).Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty).Select(x => new Chapitre() { Libelle = RemplacerEspaceIncecable(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).ToList();
             }
 
-            listeChapitre.AddRange(RecuperationListeChapitreNonSommaire(listeChapitre.Last()));
+            listeChapitre.AddRange(RecuperationListeChapitreNonSommaire(listeChapitre.LastOrDefault()));
 
             return listeChapitre;
         }
@@ -78,25 +77,27 @@ namespace RecuperationDonnee.Xiaowaz
             HtmlWeb web = new HtmlWeb();
             bool existeUnChapitreSuivant = true;
             List<Chapitre> listeChapitre = new List<Chapitre>();
-            string lienChapitreSUivant = dernierChapitre.LientHtml;
-            while (existeUnChapitreSuivant)
+            if (dernierChapitre != null)
             {
-                HtmlDocument doc = web.Load(lienChapitreSUivant);
-                var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-post-navigation-next']");
-                if (elementNavigationSuivant != null && elementNavigationSuivant.First() != null && elementNavigationSuivant.First().Element("a") != null)
+                string lienChapitreSUivant = dernierChapitre.LientHtml;
+                while (existeUnChapitreSuivant)
                 {
-                    lienChapitreSUivant = elementNavigationSuivant.First().Element("a").GetAttributeValue("Href", string.Empty);
-                    if (lienChapitreSUivant != string.Empty)
+                    HtmlDocument doc = web.Load(lienChapitreSUivant);
+                    var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-post-navigation-next']");
+                    if (elementNavigationSuivant != null && elementNavigationSuivant.First() != null && elementNavigationSuivant.First().Element("a") != null)
                     {
-                        listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = MiseEnFormeTexteChapitre(elementNavigationSuivant.First().InnerText) });
+                        lienChapitreSUivant = elementNavigationSuivant.First().Element("a").GetAttributeValue("Href", string.Empty);
+                        if (lienChapitreSUivant != string.Empty)
+                        {
+                            listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = MiseEnFormeTexteChapitre(elementNavigationSuivant.First().InnerText) });
+                        }
+                        else
+                            existeUnChapitreSuivant = false;
                     }
                     else
                         existeUnChapitreSuivant = false;
                 }
-                else
-                    existeUnChapitreSuivant = false;
             }
-
             return listeChapitre;
         }
 

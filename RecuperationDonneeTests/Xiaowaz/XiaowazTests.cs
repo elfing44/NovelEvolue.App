@@ -45,8 +45,12 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         [TestMethod]
         public void RecuperationListeNovelTest()
         {
-            IEnumerable<Novel> listeChapitre = new Xiaowaz().RecuperationListeNovel();
-            Assert.AreEqual(21, listeChapitre.Count());
+            IEnumerable<Novel> listeNovel = new Xiaowaz().RecuperationListeNovel();
+            Assert.AreEqual(21, listeNovel.Count());
+            foreach (Novel novel in listeNovel)
+            {
+                new Xiaowaz().RecuperationListeChapitre(novel.LientHtmlSommaire);
+            }
         }
 
         [TestMethod]
