@@ -49,12 +49,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\RecuperationDonnee.csproj" />
+	  <ProjectReference Include="..\..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\RecuperationDonnee.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Reference Include="HtmlAgilityPack">
-	    <HintPath>..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\bin\Debug\HtmlAgilityPack.dll</HintPath>
+	    <HintPath>..\..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\bin\Debug\HtmlAgilityPack.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
