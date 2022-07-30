@@ -7,11 +7,19 @@ namespace RecuperationDonnee.NovelDeGlace.Tests
     [TestClass]
     public class NovelDeGlaceTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void RecuperationListeNovelTest()
         {
             IEnumerable<Novel> listeNovel = new NovelDeGlace().RecuperationListeNovel();
             Assert.AreEqual(72, listeNovel.Count());
+            foreach (Novel novel in listeNovel)
+            {
+                IEnumerable<Chapitre> listechapitre = new NovelDeGlace().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                foreach (Chapitre chapitre in listechapitre)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                }
+            }
         }
 
         [TestMethod()]

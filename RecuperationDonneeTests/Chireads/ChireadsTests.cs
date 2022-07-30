@@ -7,11 +7,19 @@ namespace RecuperationDonnee.Chireads.Tests
     [TestClass()]
     public class ChireadsTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void RecuperationListeNovelTest()
         {
             IEnumerable<Novel> listeNovel = new Chireads().RecuperationListeNovel();
             Assert.AreEqual(81, listeNovel.Count());
+            foreach (Novel novel in listeNovel)
+            {
+                IEnumerable<Chapitre> listechapitre = new Chireads().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                foreach (Chapitre chapitre in listechapitre)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                }
+            }
         }
 
         [TestMethod()]

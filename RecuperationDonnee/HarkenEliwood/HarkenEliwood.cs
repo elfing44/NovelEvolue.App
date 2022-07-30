@@ -67,7 +67,7 @@ namespace RecuperationDonnee.HarkenEliwood
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(htmlSite);
                 var contenantListeChapitre = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p/a").Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://"));
-                return contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) });
+                return contenantListeChapitre.Where(x => !string.IsNullOrEmpty(System.Net.WebUtility.HtmlDecode(x.InnerText))).Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) });
             }
         }
 

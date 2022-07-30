@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RecuperationDonnee.HarkenEliwood.Tests
@@ -6,12 +7,19 @@ namespace RecuperationDonnee.HarkenEliwood.Tests
     [TestClass()]
     public class HarkenEliwoodTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void RecuperationListeNovelTest()
         {
-            var novels = new HarkenEliwood().RecuperationListeNovel();
-
-            Assert.AreEqual(10, novels.Count());
+            IEnumerable<Novel> listeNovel = new HarkenEliwood().RecuperationListeNovel();
+            Assert.AreEqual(10, listeNovel.Count());
+            foreach (Novel novel in listeNovel)
+            {
+                IEnumerable<Chapitre> listechapitre = new HarkenEliwood().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                foreach (Chapitre chapitre in listechapitre)
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                }
+            }
         }
 
         [TestMethod()]
