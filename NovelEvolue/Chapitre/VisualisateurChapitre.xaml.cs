@@ -29,9 +29,12 @@ public partial class VisualisateurChapitre : ContentPage
         }
         // Ajout de l'entete pour ajouter un theme
         texte = texte.Replace("<html>", @"<html>
-                                <head>
-                                <link rel=""stylesheet"" href=""default.css"">
-                                </head>");
+                                <style>
+                                body {
+                                background-color: #333;
+                                color: #e0e0e0;
+                                }
+                                </style>");
 
         web.Source = new HtmlWebViewSource() { Html = texte };
     }
@@ -64,6 +67,5 @@ public partial class VisualisateurChapitre : ContentPage
     {
         ChapitreView chapitre = _listeChapitre[index];
         chapitre.EstLu = true;
-
     }
 }
