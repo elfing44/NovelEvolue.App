@@ -13,12 +13,13 @@ public partial class ListeNovel : ContentPage
 {
 	SiteEnum _site;
 
-	public ListeNovel(SiteEnum site)
+	public ListeNovel(SiteEnum site, string title)
 	{
 		InitializeComponent();
 		_site = site;
 		AlimenterListeNovel();
 		ListeNovelView.ItemSelected += ListeNovelView_ItemSelected;
+		Title = title;
 	}
 
 	private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

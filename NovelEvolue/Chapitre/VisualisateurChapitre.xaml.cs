@@ -12,9 +12,10 @@ public partial class VisualisateurChapitre : ContentPage
     NovelView _novel;
 
 
-    public VisualisateurChapitre(string texte, ObservableCollection<ChapitreView> chapitreViews, int indexElement, ISite site, NovelView novel)
+    public VisualisateurChapitre(string texte, ObservableCollection<ChapitreView> chapitreViews, int indexElement, ISite site, NovelView novel, string titre)
     {
         InitializeComponent();
+        Title = titre;
         _listeChapitre = chapitreViews;
         _indexElement = indexElement;
         _site = site;
@@ -64,7 +65,7 @@ public partial class VisualisateurChapitre : ContentPage
             chapitre.Texte = _site.RecuperationChapitre(chapitre.LienHtml, true);
         }
         Navigation.PopModalAsync();
-        Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, _listeChapitre, index, _site, _novel)));
+        Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, _listeChapitre, index, _site, _novel, chapitre.Libelle)));
     }
 
     public void PasserEnLu(int index)

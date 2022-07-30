@@ -9,7 +9,7 @@ public partial class AppFlyout : FlyoutPage
         InitializeComponent();
         flyoutPage.collectionView.SelectionChanged += OnSelectionChanged;
 
-        Detail = new NavigationPage(new ListeNovel(RecuperationDonnee.SiteEnum.Xiaowaz));
+        Detail = new NavigationPage(new ListeNovel(RecuperationDonnee.SiteEnum.Xiaowaz, "Xiaowaz"));
         IsPresented = false;
     }
 
@@ -18,7 +18,7 @@ public partial class AppFlyout : FlyoutPage
         var item = e.CurrentSelection.FirstOrDefault() as FlyoutPageItem;
         if (item != null)
         {
-            Detail = new NavigationPage(new ListeNovel(item.SiteType));
+            Detail = new NavigationPage(new ListeNovel(item.SiteType, item.Title));
             IsPresented = false;
         }
     }

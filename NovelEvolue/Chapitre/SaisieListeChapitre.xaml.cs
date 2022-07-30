@@ -21,6 +21,7 @@ public partial class SaisieListeChapitre : ContentPage
         _site = site;
         _novel = novel;
         AlimenterListeNovel(site, novel);
+        Title = novel.Titre;
         ListeChapitre.ItemSelected += ListeChapitre_ItemSelected;
     }
 
@@ -35,7 +36,7 @@ public partial class SaisieListeChapitre : ContentPage
                 chapitre.Texte = _site.RecuperationChapitre(chapitre.LienHtml, true);
             }
 
-            Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, ListeChapitreView, index, _site, _novel)));
+            Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, ListeChapitreView, index, _site, _novel, chapitre.Libelle)));
             ListeChapitre.SelectedItem = null;
         }
     }
