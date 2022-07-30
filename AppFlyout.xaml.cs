@@ -7,8 +7,10 @@ public partial class AppFlyout : FlyoutPage
     public AppFlyout()
     {
         InitializeComponent();
-
         flyoutPage.collectionView.SelectionChanged += OnSelectionChanged;
+
+        Detail = new NavigationPage(new ListeNovel(RecuperationDonnee.SiteEnum.Xiaowaz));
+        IsPresented = false;
     }
 
     void OnSelectionChanged(object sender, SelectionChangedEventArgs e)

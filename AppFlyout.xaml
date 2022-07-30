@@ -4,12 +4,5 @@
             x:Class="NovelEvolue.AppFlyout">
     <FlyoutPage.Flyout>
         <local:FlyoutMenuPage x:Name="flyoutPage" />
-    </FlyoutPage.Flyout>
-    <FlyoutPage.Detail>
-        <NavigationPage>
-            <x:Arguments>
-                <local:MainPage />
-            </x:Arguments>
-        </NavigationPage>
-    </FlyoutPage.Detail>
+    </FlyoutPage.Flyout>    
 </FlyoutPage>
