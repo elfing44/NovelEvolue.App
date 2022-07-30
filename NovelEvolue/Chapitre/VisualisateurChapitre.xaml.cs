@@ -27,14 +27,18 @@ public partial class VisualisateurChapitre : ContentPage
         {
             BoutonSuivant.IsEnabled = false;
         }
-        // Ajout de l'entete pour ajouter un theme
-        texte = texte.Replace("<html>", @"<html>
+
+        if (Application.Current.RequestedTheme == AppTheme.Dark)
+        {
+            // Ajout de l'entete pour ajouter un theme
+            texte = texte.Replace("<html>", @"<html>
                                 <style>
                                 body {
                                 background-color: #333;
                                 color: #e0e0e0;
                                 }
                                 </style>");
+        }
 
         web.Source = new HtmlWebViewSource() { Html = texte };
     }
