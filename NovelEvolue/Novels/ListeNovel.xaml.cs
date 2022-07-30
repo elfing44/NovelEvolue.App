@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using NovelEvolue.Chapitre;
 using RecuperationDonnee;
 using RecuperationDonnee.Chireads;
 using RecuperationDonnee.HarkenEliwood;
@@ -17,6 +18,16 @@ public partial class ListeNovel : ContentPage
 		InitializeComponent();
 		_site = site;
 		AlimenterListeNovel();
+		ListeNovelView.ItemSelected += ListeNovelView_ItemSelected;
+	}
+
+	private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+	{
+		if (e.SelectedItem != null)
+		{
+			Navigation.PushModalAsync(new NavigationPage(new SaisieListeChapitre(DonnerSite(), (NovelView)e.SelectedItem)));
+			ListeNovelView.SelectedItem = null;
+		}
 	}
 
 	public void AlimenterListeNovel()

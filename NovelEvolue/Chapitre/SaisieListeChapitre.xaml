@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NovelEvolue.Chapitre.SaisieListeChapitre"
+             Title="SaisieListeChapitre">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="tri"
+                     IconImageSource="Tri.png" />
+        <ToolbarItem Text="Telecharger Tout"
+                     IconImageSource="Telecharger.png" />
+        <ToolbarItem Text="Actualiser"
+                     IconImageSource="Actualiser.png" />
+    </ContentPage.ToolbarItems>
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="ListeChapitre"
+                      SelectionMode="Single"
+                      IsPullToRefreshEnabled="True"
+                      ItemsSource="{Binding }">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.View>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition  Width="Auto" />
+                                        <ColumnDefinition  Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Orientation="Horizontal"
+                                                 VerticalOptions="Center"
+                                                 Grid.Column="0">
+                                        <Label Text="{Binding Libelle}"
+                                               Margin="10,0,0,0" />
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal"
+                                                 VerticalOptions="Center"
+                                                 Grid.Column="1">
+                                        <Image IsVisible="{Binding NEstTelecharger}"
+                                               HorizontalOptions="EndAndExpand"
+                                               Margin="0,0,5,0"
+                                               Source="Coche.png" />
+                                    </StackLayout>
+                                    <Button Text="{Binding EtatLu}"
+                                            Command="{Binding PassageEnLuCommand}"
+                                            Margin="0,2,10,2"
+                                            Grid.Column="2"
+                                            CornerRadius="50" />
+                                </Grid>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
