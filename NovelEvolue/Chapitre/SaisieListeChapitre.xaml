@@ -16,7 +16,9 @@
             <ListView x:Name="ListeChapitre"
                       SelectionMode="Single"
                       IsPullToRefreshEnabled="True"
-                      ItemsSource="{Binding }">
+                      ItemsSource="{Binding }"
+                      HasUnevenRows="True"
+                      RowHeight="-1">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -31,7 +33,10 @@
                                                  VerticalOptions="Center"
                                                  Grid.Column="0">
                                         <Label Text="{Binding Libelle}"
-                                               Margin="10,0,0,0" />
+                                               Margin="10,0,0,0"
+                                               LineBreakMode="WordWrap"
+                                               WidthRequest="300"
+                                               MaxLines="10" />
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal"
                                                  VerticalOptions="Center"

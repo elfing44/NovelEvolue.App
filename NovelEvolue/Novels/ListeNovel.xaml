@@ -11,26 +11,27 @@
         <StackLayout>
             <ListView x:Name="ListeNovelView"
                       SelectionMode="Single"
-                      IsPullToRefreshEnabled="True">
+                      IsPullToRefreshEnabled="True"
+                      HasUnevenRows="True"
+                      RowHeight="-1">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ViewCell>
+                        <ViewCell >
                             <ViewCell.View>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition  Width="Auto" />
-                                        <ColumnDefinition  Width="Auto" />
-                                    </Grid.ColumnDefinitions>
+                                <StackLayout Orientation="Horizontal"
+                                             VerticalOptions="Center"
+                                             Margin="10,0,0,0">
                                     <StackLayout Orientation="Horizontal"
                                                  VerticalOptions="Center"
+                                                 HorizontalOptions ="Start"
                                                  Margin="10,0,0,0">
-                                        <Image Source="{Binding Image}" />
                                         <Label Text="{Binding Titre}"
-                                               VerticalTextAlignment="Center" />
+                                               VerticalTextAlignment="Center"
+                                               LineBreakMode="WordWrap"
+                                               WidthRequest="300"
+                                               MaxLines="10" />
                                     </StackLayout>
-                                    <StackLayout Grid.Column="1"
-                                                 Orientation="Horizontal"
+                                    <StackLayout Orientation="Horizontal"
                                                  HorizontalOptions="EndAndExpand"
                                                  VerticalOptions="Center"
                                                  Margin="0,0,10,0">
@@ -38,7 +39,7 @@
                                         <Label Text="/" />
                                         <Label Text="{Binding NombreChapitre}" />
                                     </StackLayout>
-                                </Grid>
+                                </StackLayout>
                             </ViewCell.View>
                         </ViewCell>
                     </DataTemplate>
