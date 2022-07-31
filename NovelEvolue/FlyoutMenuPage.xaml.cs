@@ -15,11 +15,11 @@ public partial class FlyoutMenuPage : ContentPage
     {
         ObservableCollection<FlyoutPageItem> listeSite = new ObservableCollection<FlyoutPageItem>()
             {
-                new FlyoutPageItem() { Title = "Xiaowaz" , SiteType = SiteEnum.Xiaowaz},
-                new FlyoutPageItem() { Title = "Novel de Glace", SiteType = SiteEnum.NovelDeGlace },
-                new FlyoutPageItem() { Title = "Chireads", SiteType = SiteEnum.Chireads },
-                new FlyoutPageItem() { Title = "Harken Eliwood", SiteType = SiteEnum.HarkenEliwwoof },
-                new FlyoutPageItem() { Title = "WuxiaLNScantrad", SiteType = SiteEnum.WuxiaLNScantrad }
+                new FlyoutPageItem() { Title = "Xiaowaz" , SiteType = SiteEnum.Xiaowaz, IconSource="xiaowaz.png"},
+                new FlyoutPageItem() { Title = "Novel de Glace", SiteType = SiteEnum.NovelDeGlace, IconSource="novelglace.png" },
+                new FlyoutPageItem() { Title = "Chireads", SiteType = SiteEnum.Chireads, IconSource="chireads.png" },
+                new FlyoutPageItem() { Title = "Harken Eliwood", SiteType = SiteEnum.HarkenEliwwoof, IconSource="harkeneliwood.png" },
+                new FlyoutPageItem() { Title = "WuxiaLNScantrad", SiteType = SiteEnum.WuxiaLNScantrad, IconSource="wuxialn.png" }
             };
         collectionView.ItemsSource = listeSite;
     }
