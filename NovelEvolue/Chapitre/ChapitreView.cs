@@ -11,7 +11,7 @@ namespace NovelEvolue.Chapitre
             PassageEnLuCommand = new Command(() =>
             {
                 EstLu = !EstLu;
-                //App.Database.UpdateChapitre(new BDD.ChapitreBDD() { Libelle = Libelle, LientHtml = LienHtml, Texte = Texte, EstLu = EstLu, NovelId = NovelId });
+                App.Database.UpdateChapitre(new BDD.ChapitreBDD() { Libelle = Libelle, LientHtml = LienHtml, Texte = Texte, EstLu = EstLu, NovelLientHtmlSommaire = NovelLienHtmlSommaire });
             });
         }
 
@@ -89,6 +89,6 @@ namespace NovelEvolue.Chapitre
         }
 
         public ICommand PassageEnLuCommand { get; set; }
-        public Guid NovelId { get; internal set; }
+        public string NovelLienHtmlSommaire { get; internal set; }
     }
 }

@@ -5,10 +5,13 @@
              Title="SaisieListeChapitre">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="tri"
+                     Clicked="ToolbarItem_Trie"
                      IconImageSource="Tri.png" />
         <ToolbarItem Text="Telecharger Tout"
+                     Clicked="ToolbarItem_TelechargerTout"
                      IconImageSource="Telecharger.png" />
         <ToolbarItem Text="Actualiser"
+                     Clicked="ToolbarItem_Actualiser"
                      IconImageSource="Actualiser.png" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
@@ -44,7 +47,9 @@
                                         <Image IsVisible="{Binding NEstTelecharger}"
                                                HorizontalOptions="EndAndExpand"
                                                Margin="0,0,5,0"
-                                               Source="Coche.png" />
+                                               Source="Coche.png"
+                                               MaximumHeightRequest="20"
+                                               MaximumWidthRequest="20"/>
                                     </StackLayout>
                                     <Button Text="{Binding EtatLu}"
                                             Command="{Binding PassageEnLuCommand}"
