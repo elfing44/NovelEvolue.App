@@ -5,6 +5,7 @@
              Title="ListeNovel">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Actualiser"
+                     Clicked ="ToolbarItem_Clicked"
                      IconImageSource="Actualiser.png" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>

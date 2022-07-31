@@ -49,6 +49,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\Actualiser.png" />
+	  <None Remove="Resources\Images\Coche.png" />
+	  <None Remove="Resources\Images\Telecharger.png" />
+	  <None Remove="Resources\Images\Tri.png" />
+	  <None Remove="Resources\Images\TriBas.png" />
+	  <None Remove="Resources\Images\TriHaut.png" />
+	</ItemGroup>
+  
+	<ItemGroup>
+	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
+	  <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />
+	  <PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.0" />
+	  <PackageReference Include="SQLitePCLRaw.core" Version="2.1.0" />
+	  <PackageReference Include="SQLitePCLRaw.provider.dynamic_cdecl" Version="2.1.0" />
+	  <PackageReference Include="SQLitePCLRaw.provider.sqlite3" Version="2.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\RecuperationDonnee\RecuperationDonnee.csproj" />
 	</ItemGroup>
 
@@ -59,10 +77,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="AppFlyout.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Chapitre\SaisieListeChapitre.xaml">
+    <MauiXaml Update="AppFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Chapitre\SaisieListeChapitre.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Chapitre\VisualisateurChapitre.xaml">

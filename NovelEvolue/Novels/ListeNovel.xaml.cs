@@ -33,7 +33,19 @@ public partial class ListeNovel : ContentPage
 
 	public void AlimenterListeNovel()
 	{
-		IEnumerable<Novel> listeNovel = DonnerSite().RecuperationListeNovel();
+		ISite site = DonnerSite();
+
+		IEnumerable<Novel> listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
+		if (listeNovel == null || !listeNovel.Any())
+		{
+			listeNovel = site.RecuperationListeNovel();
+			foreach (Novel novel in listeNovel)
+			{
+				App.Database.SauverNovel(novel, site.siteEnum);
+			}
+			// pour avoir les ids a jour des novels
+			listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
+		}
 		ObservableCollection<NovelView> listeNovelView = new ObservableCollection<NovelView>(listeNovel.Select(x => TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
 		ListeNovelView.ItemsSource = listeNovelView;
 	}
@@ -71,5 +83,24 @@ public partial class ListeNovel : ContentPage
 				break;
 		}
 		return site;
+	}
+
+	private void ToolbarItem_Clicked(object sender, EventArgs e)
+	{
+		ListeNovelView.IsRefreshing = true;
+		ISite site = DonnerSite();
+
+		IEnumerable<Novel> listeNovel = site.RecuperationListeNovel();
+		foreach (Novel novel in listeNovel)
+		{
+			App.Database.SauverNovel(novel, site.siteEnum);
+		}
+
+		App.Database.SupprimerNovel(listeNovel.ToList(), site.siteEnum);
+
+		listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
+		ObservableCollection<NovelView> listeNovelView = new ObservableCollection<NovelView>(listeNovel.Select(x => TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
+		ListeNovelView.ItemsSource = listeNovelView;
+		ListeNovelView.IsRefreshing = false;
 	}
 }
