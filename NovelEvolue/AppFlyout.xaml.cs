@@ -10,7 +10,10 @@ public partial class AppFlyout : FlyoutPage
         flyoutPage.collectionView.SelectionChanged += OnSelectionChanged;
 
         Detail = new NavigationPage(new ListeNovel(RecuperationDonnee.SiteEnum.Xiaowaz, "Xiaowaz"));
-        IsPresented = false;
+        if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+        {
+            IsPresented = false;
+        }
     }
 
     void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -19,7 +22,10 @@ public partial class AppFlyout : FlyoutPage
         if (item != null)
         {
             Detail = new NavigationPage(new ListeNovel(item.SiteType, item.Title));
-            IsPresented = false;
+            if (DeviceInfo.Current.Platform == DevicePlatform.Android)
+            {
+                IsPresented = false;
+            }
         }
     }
 }
