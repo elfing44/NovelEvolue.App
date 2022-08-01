@@ -21,11 +21,17 @@
                     Text="Précédent"
                     Grid.Row="1"
                     Grid.Column="0"
+                    BackgroundColor="Grey"
+                    TextColor="White"
+                    Margin="1,0"
                     Clicked="ButtonPrecedent_Clicked" />
             <Button x:Name="BoutonSuivant"
                     Text="Suivant"
                     Grid.Row="1"
                     Grid.Column="1"
+                    BackgroundColor="Grey"
+                    TextColor="White"
+                    Margin="1,0"
                     Clicked="ButtonSuivant_Clicked" />
         </Grid>
     </ContentPage.Content>

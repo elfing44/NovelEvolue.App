@@ -63,6 +63,8 @@ public partial class VisualisateurChapitre : ContentPage
         if (string.IsNullOrEmpty(chapitre.Texte))
         {
             chapitre.Texte = _site.RecuperationChapitre(chapitre.LienHtml, true);
+            App.Database.UpdateChapitre(new BDD.ChapitreBDD() { Libelle = chapitre.Libelle, LientHtml = chapitre.LienHtml, Texte = chapitre.Texte, NovelLientHtmlSommaire = _novel.LienHtml });
+
         }
         Navigation.PopModalAsync();
         Navigation.PushModalAsync(new NavigationPage(new VisualisateurChapitre(chapitre.Texte, _listeChapitre, index, _site, _novel, chapitre.Libelle)));
@@ -72,5 +74,6 @@ public partial class VisualisateurChapitre : ContentPage
     {
         ChapitreView chapitre = _listeChapitre[index];
         chapitre.EstLu = true;
+        App.Database.UpdateChapitre(new BDD.ChapitreBDD() { Libelle = chapitre.Libelle, LientHtml = chapitre.LienHtml, Texte = chapitre.Texte, NovelLientHtmlSommaire = _novel.LienHtml, EstLu = chapitre.EstLu });
     }
 }

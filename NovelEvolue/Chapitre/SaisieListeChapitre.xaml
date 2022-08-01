@@ -55,7 +55,9 @@
                                             Command="{Binding PassageEnLuCommand}"
                                             Margin="0,2,10,2"
                                             Grid.Column="2"
-                                            CornerRadius="50" />
+                                            BackgroundColor="Grey"                                            
+                                            TextColor="White"
+                                            CornerRadius="40" />
                                 </Grid>
                             </ViewCell.View>
                         </ViewCell>
