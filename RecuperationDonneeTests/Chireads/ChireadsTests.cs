@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,6 +11,7 @@ namespace RecuperationDonnee.Chireads.Tests
         [TestMethod]
         public void RecuperationListeNovelTest()
         {
+            List<string> listeLienErreur = new List<string>();
             IEnumerable<Novel> listeNovel = new Chireads().RecuperationListeNovel();
             Assert.AreEqual(81, listeNovel.Count());
             foreach (Novel novel in listeNovel)
@@ -18,7 +20,21 @@ namespace RecuperationDonnee.Chireads.Tests
                 foreach (Chapitre chapitre in listechapitre)
                 {
                     Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                    try
+                    {
+
+                        new Chireads().RecuperationChapitre(chapitre.LientHtml, true);
+                    }
+                    catch
+                    {
+                        listeLienErreur.Add(chapitre.LientHtml);
+                    }
                 }
+            }
+
+            if (listeLienErreur.Any())
+            {
+                Assert.Fail(string.Join(Environment.NewLine, listeLienErreur));
             }
         }
 
@@ -26,7 +42,7 @@ namespace RecuperationDonnee.Chireads.Tests
         public void RecuperationListeChapitreTest()
         {
             IEnumerable<Chapitre> listeChapitre = new Chireads().RecuperationListeChapitre(@"https://chireads.com/category/translatedtales/dragon-marked-war-god/");
-            Assert.AreEqual(194, listeChapitre.Count());
+            Assert.AreEqual(195, listeChapitre.Count());
         }
     }
 }

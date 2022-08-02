@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -46,6 +47,7 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         [TestMethod]
         public void RecuperationListeNovelTest()
         {
+            List<string> listeLienErreur = new List<string>();
             IEnumerable<Novel> listeNovel = new Xiaowaz().RecuperationListeNovel();
             Assert.AreEqual(21, listeNovel.Count());
             foreach (Novel novel in listeNovel)
@@ -54,7 +56,20 @@ namespace RecuperationDonnee.Xiaowaz.Tests
                 foreach (Chapitre chapitre in listechapitre)
                 {
                     Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
+                    try
+                    {
+
+                        new Xiaowaz().RecuperationChapitre(chapitre.LientHtml, true);
+                    }
+                    catch
+                    {
+                        listeLienErreur.Add(chapitre.LientHtml);
+                    }
                 }
+            }
+            if (listeLienErreur.Any())
+            {
+                Assert.Fail(string.Join(Environment.NewLine, listeLienErreur));
             }
         }
 
@@ -62,6 +77,12 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         public void RecupererInformationNovelTest()
         {
             InformationNovel info = new Xiaowaz().RecupererInformationNovel(@"https://xiaowaz.fr/series-en-cours/a-monster-who-levels-up/");
+        }
+
+        [TestMethod]
+        public void RecuperationChapitreTestEER104()
+        {
+            new Xiaowaz().RecuperationChapitre("https://xiaowaz.fr/articles/eer-chapitre-104-bonus/", true);
         }
     }
 }

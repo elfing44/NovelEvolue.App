@@ -21,6 +21,12 @@ namespace RecuperationDonnee.Xiaowaz
 
         private const string _debutIdSpan = "more-";
 
+        public List<string> listeLienARetirer = new List<string>()
+        {
+            "https://www.fictionpress.com/s/2961893/1/Mother-of-Learning",
+            "http://www.wuxiaworld.com/bp-index/"
+        };
+
         /// <summary>
         /// Retoune la liste de chaptitre sur la page de lien
         /// </summary>
@@ -64,7 +70,7 @@ namespace RecuperationDonnee.Xiaowaz
 
             listeChapitre.AddRange(RecuperationListeChapitreNonSommaire(listeChapitre.LastOrDefault()));
 
-            return listeChapitre;
+            return listeChapitre.Where(x => !listeLienARetirer.Contains(x.LientHtml));
         }
 
         /// <summary>
@@ -136,7 +142,7 @@ namespace RecuperationDonnee.Xiaowaz
 
             // le more-9 correpond au chapitre 1 de TDG je part du principe qu'il n'y a pas d'autre chapitre avec la même ID 
             // sur le chapitre 1 de TDG le span et au début du chapitre et pas au dessus du chapitre
-            bool contientUnSpanMore = listeBaliseP.Where(x => x.FirstChild.Id.Contains(_debutIdSpan)).Any() && !listeBaliseP.Where(x => x.FirstChild.Id.Equals(_debutIdSpan + "9")).Any();
+            bool contientUnSpanMore = listeBaliseP.Where(x => x.FirstChild != null && x.FirstChild.Id.Contains(_debutIdSpan)).Any() && !listeBaliseP.Where(x => x.FirstChild != null && x.FirstChild.Id.Equals(_debutIdSpan + "9")).Any();
 
             List<string> listeParagraphe = new List<string>();
 
@@ -161,7 +167,7 @@ namespace RecuperationDonnee.Xiaowaz
             bool prendreElement = !contientUnSpanMore;
             foreach (var baliseP in listeBaliseP)
             {
-                if (baliseP.FirstChild.Id.Contains(_debutIdSpan))
+                if (baliseP.FirstChild != null && baliseP.FirstChild.Id.Contains(_debutIdSpan))
                     prendreElement = true;
                 if (prendreElement && !baliseP.InnerText.Equals("&nbsp;") && !string.IsNullOrWhiteSpace(baliseP.InnerText))
                 {
