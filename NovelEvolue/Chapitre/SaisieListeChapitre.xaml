@@ -18,7 +18,6 @@
         <StackLayout>
             <ListView x:Name="ListeChapitre"
                       SelectionMode="Single"
-                      IsPullToRefreshEnabled="True"
                       ItemsSource="{Binding }"
                       HasUnevenRows="True"
                       RowHeight="-1">

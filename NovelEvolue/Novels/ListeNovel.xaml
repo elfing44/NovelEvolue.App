@@ -12,7 +12,6 @@
         <StackLayout>
             <ListView x:Name="ListeNovelView"
                       SelectionMode="Single"
-                      IsPullToRefreshEnabled="True"
                       HasUnevenRows="True"
                       RowHeight="-1">
                 <ListView.ItemTemplate>
