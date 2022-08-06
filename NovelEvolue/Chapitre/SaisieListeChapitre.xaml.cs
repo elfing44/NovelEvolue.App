@@ -17,12 +17,19 @@ public partial class SaisieListeChapitre : ContentPage
 
     public SaisieListeChapitre(ISite site, NovelView novel)
     {
+        this.Resources.Add("tailleecran", DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density);
         InitializeComponent();
         _site = site;
         _novel = novel;
         AlimenterListeNovel(site, novel);
         Title = novel.Titre;
         ListeChapitre.ItemSelected += ListeChapitre_ItemSelected;
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        this.Resources["tailleecran"] = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+        base.OnSizeAllocated(width, height);
     }
 
     private void ListeChapitre_ItemSelected(object sender, SelectedItemChangedEventArgs e)

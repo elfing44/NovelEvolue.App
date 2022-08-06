@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tools="clr-namespace:NovelEvolue.Tools"
              x:Class="NovelEvolue.Chapitre.SaisieListeChapitre"
              Title="SaisieListeChapitre">
     <ContentPage.ToolbarItems>
@@ -14,6 +15,9 @@
                      Clicked="ToolbarItem_Actualiser"
                      IconImageSource="Actualiser.png" />
     </ContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <tools:RatioConverter x:Key="ratio" />
+    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout>
             <ListView x:Name="ListeChapitre"
@@ -37,7 +41,7 @@
                                         <Label Text="{Binding Libelle}"
                                                Margin="10,0,0,0"
                                                LineBreakMode="WordWrap"
-                                               WidthRequest="300"
+                                               WidthRequest="{Binding Source={x:StaticResource tailleecran} ,Converter={StaticResource ratio}, ConverterParameter='0.7'}"
                                                MaxLines="10" />
                                     </StackLayout>
                                     <StackLayout Orientation="Horizontal"

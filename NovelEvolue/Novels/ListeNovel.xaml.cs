@@ -15,11 +15,18 @@ public partial class ListeNovel : ContentPage
 
 	public ListeNovel(SiteEnum site, string title)
 	{
+		this.Resources.Add("tailleecran", DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density);
 		InitializeComponent();
 		_site = site;
 		AlimenterListeNovel();
 		ListeNovelView.ItemSelected += ListeNovelView_ItemSelected;
 		Title = title;
+	}
+
+	protected override void OnSizeAllocated(double width, double height)
+	{
+		this.Resources["tailleecran"] = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
+		base.OnSizeAllocated(width, height);
 	}
 
 	private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
