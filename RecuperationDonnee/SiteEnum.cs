@@ -6,6 +6,7 @@
         Chireads,
         NovelDeGlace,
         HarkenEliwwoof,
-        WuxiaLNScantrad
+        WuxiaLNScantrad,
+        WarriorLegendTrad,
     }
 }
