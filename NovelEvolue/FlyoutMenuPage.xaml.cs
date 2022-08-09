@@ -20,7 +20,7 @@ public partial class FlyoutMenuPage : ContentPage
                 new FlyoutPageItem() { Title = "Chireads", SiteType = SiteEnum.Chireads, IconSource="chireads.png" },
                 new FlyoutPageItem() { Title = "Harken Eliwood", SiteType = SiteEnum.HarkenEliwwoof, IconSource="harkeneliwood.png" },
                 new FlyoutPageItem() { Title = "WuxiaLNScantrad", SiteType = SiteEnum.WuxiaLNScantrad, IconSource="wuxialn.png" },
-                new FlyoutPageItem() { Title = "Warrior Legend Trad", SiteType = SiteEnum.WarriorLegendTrad }
+                new FlyoutPageItem() { Title = "Warrior Legend Trad", SiteType = SiteEnum.WarriorLegendTrad,IconSource="warirorlegendtrad.png" }
             };
         collectionView.ItemsSource = listeSite;
     }
