@@ -131,23 +131,18 @@ namespace RecuperationDonnee.Chireads
 
             List<string> listeParagraphe = new List<string>();
 
-            listeParagraphe.Add("<html>");
-            listeParagraphe.Add("<body>");
-
-
-
-            foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes))
+            foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes).Where(x => !string.IsNullOrEmpty(x.InnerHtml)))
             {
-
-                listeParagraphe.Add(balise.OuterHtml);
-
+                listeParagraphe.Add(balise.InnerHtml);
             }
 
-            listeParagraphe.Add("</body>");
-            listeParagraphe.Add("</html>");
-
-            informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe);
+            informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe).Replace("<br>", Environment.NewLine).Trim(Environment.NewLine.ToArray());
             var image = doc.GetElementbyId("content").SelectNodes("//div[@class='inform-product']/img");
+            Regex regexAuteur = new Regex("Auteur : (.*?)&nbsp;");
+            informationNovel.Auteur = regexAuteur.Match(doc.Text).Groups[1].Value;
+
+            Regex regexTraducteur = new Regex("Fantrad : (.*?)&nbsp;");
+            informationNovel.TraducteurFR = regexTraducteur.Match(doc.Text).Groups[1].Value;
 
             informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
             return informationNovel;
