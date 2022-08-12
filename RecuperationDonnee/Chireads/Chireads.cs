@@ -41,7 +41,9 @@ namespace RecuperationDonnee.Chireads
         {
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(lienChapitre);
-            doc.LoadHtml(doc.Text.Replace("</i> <i>", ""));
+            doc.LoadHtml(doc.Text.Replace("</i> <i>", " "));
+            doc.LoadHtml(doc.Text.Replace("</strong> <strong>", " "));
+
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//*[@id='content']/p");
             var listeBaliseDivTitre = doc.GetElementbyId("content").SelectNodes("//div[@class='font-color-black3 article-title']");
 
@@ -126,7 +128,7 @@ namespace RecuperationDonnee.Chireads
             InformationNovel informationNovel = new InformationNovel();
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(lienPageIntroduction);
-            doc.LoadHtml(doc.Text.Replace("</i> <i>", ""));
+            doc.LoadHtml(doc.Text.Replace("</i> <i>", " "));
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='inform-inform-txt']/div[@class='inform-txt-show font-color-black6']");
 
             List<string> listeParagraphe = new List<string>();
@@ -143,7 +145,11 @@ namespace RecuperationDonnee.Chireads
 
             Regex regexTraducteur = new Regex("Fantrad : (.*?)&nbsp;");
             informationNovel.TraducteurFR = regexTraducteur.Match(doc.Text).Groups[1].Value;
-
+            if (string.IsNullOrEmpty(informationNovel.TraducteurFR))
+            {
+                regexTraducteur = new Regex("Traducteur : (.*?)&nbsp;");
+                informationNovel.TraducteurFR = regexTraducteur.Match(doc.Text).Groups[1].Value;
+            }
             informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
             return informationNovel;
         }
