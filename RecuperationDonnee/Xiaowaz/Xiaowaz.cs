@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace RecuperationDonnee.Xiaowaz
@@ -189,37 +191,181 @@ namespace RecuperationDonnee.Xiaowaz
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
+            if (lienPageIntroduction == "https://xiaowaz.fr/articles/category/douluo-dalu/"
+                || lienPageIntroduction == "https://xiaowaz.fr/series-abandonnees/la-porte-de-la-chance/")
+            {
+                return new InformationNovel();
+            }
+
             InformationNovel informationNovel = new InformationNovel();
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(lienPageIntroduction);
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
             List<string> listeParagraphe = new List<string>();
 
-            listeParagraphe.Add("<html>");
-            listeParagraphe.Add("<body>");
-
-
             foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes))
             {
-                if (balise.OuterHtml.StartsWith("<p"))
+                if (balise.InnerText.Contains("Écrit par")
+                    || balise.InnerText.Contains("Ecrit par")
+                    || balise.InnerText.Contains("Sorties régulières le mardi et vendredi&nbsp;!")
+                    || balise.InnerText.Contains("Auteur&nbsp;:")
+                    || balise.InnerText.Contains("Statut VO&nbsp;:")
+                    || balise.InnerText.Contains("Nom utilisé&nbsp;:")
+                    || balise.InnerText.Contains("Auteur original&nbsp;:")
+                    || balise.InnerText.Contains("Auteur original de l’oeuvre")
+                    || balise.InnerText.Contains("851 chapitres en"))
+                {
+                    break;
+                }
+
+                if (balise.OuterHtml.StartsWith("<p")
+                    && !balise.InnerHtml.Contains("text-decoration: underline; font-size: 12pt;"))
                 {
                     if (balise.OuterHtml.StartsWith("<p><a href="))
                         break;
-                    if (!balise.OuterHtml.Contains("<img "))
-                        listeParagraphe.Add(balise.OuterHtml);
+                    if (!balise.OuterHtml.Contains("<img ") && !string.IsNullOrWhiteSpace(WebUtility.HtmlDecode(balise.InnerText)))
+                        listeParagraphe.Add(WebUtility.HtmlDecode(balise.InnerText));
                 }
-
             }
 
-            listeParagraphe.Add("</body>");
-            listeParagraphe.Add("</html>");
-
-            informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe);
+            informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe).Trim(Environment.NewLine.ToArray());
             var image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p/img");
             if (image == null)
                 image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h4/img");
+            if (image == null)
+                image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h1/img");
             informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
+
+            informationNovel.Auteur = WebUtility.HtmlDecode(RecupererAuteur(doc.Text));
+            informationNovel.TraducteurFR = WebUtility.HtmlDecode(RecupererTraducteur(doc.Text));
             return informationNovel;
+        }
+
+        private string RecupererAuteur(string doc)
+        {
+            Regex regexAuteur = new Regex(@"Écrit par&nbsp;(.*?)\.");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"Ecrit par&nbsp;: (.*?)</strong>");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"Écrit par (.*?)\.");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"Auteur original de l’œuvre&nbsp;:(.*?)<a");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty).Trim(' ');
+            }
+            regexAuteur = new Regex(@"Auteur original de l’oeuvre&nbsp;: (.*?)</strong");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty).Trim(' ');
+            }
+
+            regexAuteur = new Regex(@"<strong>Auteur&nbsp;:</strong>&nbsp;(.*?)</p");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+            regexAuteur = new Regex(@"<strong>Auteur&nbsp;:(.*?)>(.*?)</a></strong");
+            if (regexAuteur.Match(doc).Groups.Count == 3 && !string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[2].Value))
+            {
+                return regexAuteur.Match(doc).Groups[2].Value;
+            }
+
+            regexAuteur = new Regex(@"<strong>Auteur</strong>&nbsp;: <strong><a(.*?)>(.*?)</a></strong");
+            if (regexAuteur.Match(doc).Groups.Count == 3 && !string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[2].Value))
+            {
+                return regexAuteur.Match(doc).Groups[2].Value;
+            }
+
+            regexAuteur = new Regex(@"<strong>Auteur&nbsp;:</strong>(.*?)</p");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"Auteur: (.*?) Description");
+            if (regexAuteur.Match(doc).Groups.Count == 2 && !string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"Auteur original&nbsp;:&nbsp;(.*?)</p");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            regexAuteur = new Regex(@"<strong>Auteure&nbsp;:&nbsp;(.*?)</strong");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc).Groups[1].Value;
+            }
+
+            return string.Empty;
+        }
+
+        private string RecupererTraducteur(string doc)
+        {
+            Regex regexTraducteur = new Regex(@"Traduction par&nbsp;(.*?)\.");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"Traduction&nbsp;: (.*?)</p");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"Traduction par (.*?)\.");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"</a> par (.*?)</p");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value.Replace("<strong>", string.Empty).Replace("</strong>", string.Empty).Trim(' ');
+            }
+            regexTraducteur = new Regex(@"Traducteur&nbsp;: (.*?)\.");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"Traducteur français&nbsp;:</span> </strong>(.*?)</p");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"Traduction française par (.*?)</strong");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            regexTraducteur = new Regex(@"Traducteur français&nbsp;: </strong>(.*?)</p");
+            if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
+            {
+                return regexTraducteur.Match(doc).Groups[1].Value;
+            }
+
+            return string.Empty;
         }
     }
 }

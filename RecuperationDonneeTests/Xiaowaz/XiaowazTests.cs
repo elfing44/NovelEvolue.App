@@ -76,7 +76,43 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         [TestMethod]
         public void RecupererInformationNovelTest()
         {
-            InformationNovel info = new Xiaowaz().RecupererInformationNovel(@"https://xiaowaz.fr/series-en-cours/a-monster-who-levels-up/");
+            List<string> listeInfos = new List<string>();
+            IEnumerable<Novel> listeNovel = new Xiaowaz().RecuperationListeNovel();
+            Assert.AreEqual(21, listeNovel.Count());
+            foreach (Novel novel in listeNovel)
+            {
+                InformationNovel infos = new Xiaowaz().RecupererInformationNovel(novel.LientHtmlSommaire);
+
+                if (novel.LientHtmlSommaire != "https://xiaowaz.fr/articles/category/douluo-dalu/"
+                    && novel.LientHtmlSommaire != "https://xiaowaz.fr/series-abandonnees/la-porte-de-la-chance/")
+                {
+                    Assert.IsFalse(string.IsNullOrEmpty(infos.Auteur), novel.LientHtmlSommaire);
+                    Assert.IsFalse(string.IsNullOrEmpty(infos.LienImage), novel.LientHtmlSommaire);
+                    if (novel.LientHtmlSommaire != "https://xiaowaz.fr/series-en-cours/defier-les-neuf-cieux/"
+                        && novel.LientHtmlSommaire != "https://xiaowaz.fr/series-en-cours/tales-of-demons-and-gods/"
+                        && novel.LientHtmlSommaire != "https://xiaowaz.fr/series-abandonnees/shuras-wrath/"
+                        && novel.LientHtmlSommaire != "https://xiaowaz.fr/series-abandonnees/wu-dong-qian-kun/"
+                        && !novel.LientHtmlSommaire.Contains("oeuvres-originales"))
+                    {
+
+                        Assert.IsFalse(string.IsNullOrEmpty(infos.TraducteurFR), novel.LientHtmlSommaire);
+                    }
+                    Assert.IsFalse(string.IsNullOrEmpty(infos.Resume), novel.LientHtmlSommaire);
+                }
+
+                /*Permet l'affichage des infos de tous les novels
+                listeInfos.Add(string.Format("Lien du sommaire : {0}", novel.LientHtmlSommaire));
+                listeInfos.Add(string.Format("Auteur : {0}", infos.Auteur));
+                listeInfos.Add(string.Format("LienImage : {0}", infos.LienImage));
+                listeInfos.Add(string.Format("Traducteur Français : {0}", infos.TraducteurFR));
+                listeInfos.Add(string.Format("Résume : {0}", infos.Resume));
+                listeInfos.Add(string.Empty);
+                listeInfos.Add(string.Empty);*/
+            }
+            if (listeInfos.Any())
+            {
+                Assert.Fail(string.Join(Environment.NewLine, listeInfos));
+            }
         }
 
         [TestMethod]
