@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace RecuperationDonnee.WarriorLegendTrad
@@ -84,14 +85,59 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 var elementOngletSerie = entetePage.Descendants().Where(x => x.GetAttributeValue("class", string.Empty) == "sub-menu");
                 var listeSerie = elementOngletSerie.Select(x => x.ChildNodes).First().Select(x => x.Element("a")).Where(x => x != null);
 
-
                 return listeSerie.Select(x => new Novel() { LientHtmlSommaire = x.GetAttributeValue("href", string.Empty), Titre = WebUtility.HtmlDecode(x.InnerText) });
             }
         }
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            throw new NotImplementedException();
+            InformationNovel informationNovel = new InformationNovel();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = System.Text.Encoding.UTF8;
+
+                var htmlSite = client.DownloadString(lienPageIntroduction);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlSite);
+                var image = doc.GetElementbyId("content").SelectNodes("//div[@class='site-content']/section/main/article/figure/img");
+
+
+
+                var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
+                string elementContenantSynopsis = string.Join(Environment.NewLine, listeBaliseDivTexte.Select(x => WebUtility.HtmlDecode(x.InnerText)));
+
+                Regex regexResume = new Regex(@"Synopsis :([\s\S]*)index chapitre :", RegexOptions.IgnoreCase);
+
+                informationNovel.Auteur = WebUtility.HtmlDecode(RecupererAuteur(doc)).Trim(' ');
+                informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
+                informationNovel.Resume = regexResume.Match(elementContenantSynopsis).Groups[1].Value.Trim(Environment.NewLine.ToArray())
+                    .Replace("\n\n", Environment.NewLine)
+                    .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+            }
+            return informationNovel;
+        }
+
+        private static string RecupererAuteur(HtmlDocument doc)
+        {
+            Regex regexAuteur = new Regex(@"<p><strong>Auteur&nbsp;:</strong> <a(.*?)></a><a(.*?)>(.*?)</a></p>");
+            if (regexAuteur.Match(doc.Text).Groups.Count == 4 && !string.IsNullOrEmpty(regexAuteur.Match(doc.Text).Groups[3].Value))
+            {
+                return regexAuteur.Match(doc.Text).Groups[3].Value.Trim(' ');
+            }
+            regexAuteur = new Regex(@"<p><strong>Auteur&nbsp;:</strong> <a(.*?)>(.*?)</a></p>");
+            if (regexAuteur.Match(doc.Text).Groups.Count == 3 && !string.IsNullOrEmpty(regexAuteur.Match(doc.Text).Groups[2].Value))
+            {
+                return regexAuteur.Match(doc.Text).Groups[2].Value;
+            }
+
+            regexAuteur = new Regex(@"<p><strong>Auteur&nbsp;:</strong>(.*?)</p>");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(doc.Text).Groups[1].Value))
+            {
+                return regexAuteur.Match(doc.Text).Groups[1].Value;
+            }
+
+            return string.Empty;
         }
     }
 }
