@@ -78,7 +78,6 @@ namespace RecuperationDonnee.Xiaowaz.Tests
         {
             List<string> listeInfos = new List<string>();
             IEnumerable<Novel> listeNovel = new Xiaowaz().RecuperationListeNovel();
-            Assert.AreEqual(21, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
                 InformationNovel infos = new Xiaowaz().RecupererInformationNovel(novel.LientHtmlSommaire);

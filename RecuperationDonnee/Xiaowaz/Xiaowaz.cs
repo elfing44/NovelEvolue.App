@@ -191,13 +191,13 @@ namespace RecuperationDonnee.Xiaowaz
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
+            InformationNovel informationNovel = new InformationNovel();
             if (lienPageIntroduction == "https://xiaowaz.fr/articles/category/douluo-dalu/"
                 || lienPageIntroduction == "https://xiaowaz.fr/series-abandonnees/la-porte-de-la-chance/")
             {
-                return new InformationNovel();
+                return informationNovel;
             }
 
-            InformationNovel informationNovel = new InformationNovel();
             HtmlWeb web = new HtmlWeb();
             HtmlDocument doc = web.Load(lienPageIntroduction);
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
