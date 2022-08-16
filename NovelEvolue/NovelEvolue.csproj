@@ -84,7 +84,7 @@
 
 	<ItemGroup>
 	  <Reference Include="HtmlAgilityPack">
-	    <HintPath>..\..\..\Users\adano\Desktop\Android\MobileNovel\MobileNovel\RecuperationDonnee\bin\Debug\HtmlAgilityPack.dll</HintPath>
+	    <HintPath>..\RecuperationDonnee\bin\Debug\HtmlAgilityPack.dll</HintPath>
 	  </Reference>
 	</ItemGroup>
 
