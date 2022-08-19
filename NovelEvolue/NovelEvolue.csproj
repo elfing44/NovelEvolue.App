@@ -58,8 +58,6 @@
 	  <None Remove="Resources\Images\novelglace.png" />
 	  <None Remove="Resources\Images\Telecharger.png" />
 	  <None Remove="Resources\Images\Tri.png" />
-	  <None Remove="Resources\Images\TriBas.png" />
-	  <None Remove="Resources\Images\TriHaut.png" />
 	  <None Remove="Resources\Images\warirorlegendtrad.png" />
 	  <None Remove="Resources\Images\wuxialn.png" />
 	  <None Remove="Resources\Images\xiaowaz.png" />
