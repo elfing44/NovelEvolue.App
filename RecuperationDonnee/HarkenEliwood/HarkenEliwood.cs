@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace RecuperationDonnee.HarkenEliwood
@@ -87,7 +88,80 @@ namespace RecuperationDonnee.HarkenEliwood
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            throw new System.NotImplementedException();
+            InformationNovel infos = new InformationNovel();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = System.Text.Encoding.UTF8;
+                var htmlSite = client.DownloadString(lienPageIntroduction);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlSite);
+
+                var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
+                string elementContenantSynopsis = string.Join(Environment.NewLine, listeBaliseDivTexte.Select(x => WebUtility.HtmlDecode(x.InnerText)));
+                var image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p/img");
+
+                if (image != null)
+                {
+                    infos.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
+                }
+
+
+                infos.Resume = RecupererResume(elementContenantSynopsis).Trim(Environment.NewLine.ToArray())
+                        .Replace("\n\n", Environment.NewLine)
+                        .Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                infos.Auteur = RecupererAuteur(elementContenantSynopsis).Trim(' ');
+            }
+
+
+            return infos;
+        }
+
+        private static string RecupererAuteur(string text)
+        {
+            Regex regexAuteur = new Regex(@"Auteur :(.*?)" + Environment.NewLine);
+            if (!string.IsNullOrEmpty(regexAuteur.Match(text).Groups[1].Value))
+            {
+                return regexAuteur.Match(text).Groups[1].Value;
+            }
+            regexAuteur = new Regex(@"Auteur :(.*?)\n");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(text).Groups[1].Value))
+            {
+                return regexAuteur.Match(text).Groups[1].Value;
+            }
+
+            return string.Empty;
+        }
+
+        private static string RecupererResume(string text)
+        {
+            Regex regexResume = new Regex(@"Synopsis :([\s\S]*)Traduction anglaise", RegexOptions.IgnoreCase);
+            string resume = regexResume.Match(text).Groups[1].Value;
+            if (string.IsNullOrEmpty(resume))
+            {
+                regexResume = new Regex(@"Synopsis :([\s\S]*)Raw :", RegexOptions.IgnoreCase);
+                resume = regexResume.Match(text).Groups[1].Value;
+            }
+
+            if (string.IsNullOrEmpty(resume))
+            {
+                regexResume = new Regex(@"Synopsis 1 :([\s\S]*)Synopsis 2 :([\s\S]*)Raw :", RegexOptions.IgnoreCase);
+                resume = regexResume.Match(text).Groups[1].Value + regexResume.Match(text).Groups[2].Value;
+            }
+
+            if (string.IsNullOrEmpty(resume))
+            {
+                regexResume = new Regex(@"Synopsis :([\s\S]*)Prélude", RegexOptions.IgnoreCase);
+                resume = regexResume.Match(text).Groups[1].Value;
+            }
+
+            regexResume = new Regex(@"([\s\S]*)Raw :", RegexOptions.IgnoreCase);
+
+            if (!string.IsNullOrEmpty(regexResume.Match(resume).Groups[1].Value))
+            {
+                resume = regexResume.Match(resume).Groups[1].Value;
+            }
+            return resume;
         }
     }
 }
