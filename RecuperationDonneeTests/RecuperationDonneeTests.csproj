@@ -61,6 +61,7 @@
     <Compile Include="NovelDeGlace\NovelDeGlaceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WarriorLegendTrad\WarriorLegendTradTests.cs" />
+    <Compile Include="WuxiaLNScantrad\WuxiaLNScantradTests.cs" />
     <Compile Include="Xiaowaz\XiaowazTests.cs" />
   </ItemGroup>
   <ItemGroup>

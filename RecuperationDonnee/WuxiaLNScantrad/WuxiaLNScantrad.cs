@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace RecuperationDonnee.WuxiaLNScantrad
@@ -91,7 +92,48 @@ namespace RecuperationDonnee.WuxiaLNScantrad
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            throw new NotImplementedException();
+            InformationNovel informationNovel = new InformationNovel();
+
+            using (WebClient client = new WebClient())
+            {
+                client.Encoding = System.Text.Encoding.UTF8;
+                var htmlSite = client.DownloadString(lienPageIntroduction);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlSite);
+
+                var listeBaliseDivTexte = doc.GetElementbyId("primary").SelectNodes("//div[@class='entry-content']");
+                string elementContenantSynopsis = string.Join(Environment.NewLine, listeBaliseDivTexte.Select(x => WebUtility.HtmlDecode(x.InnerText)));
+                var image = doc.GetElementbyId("primary").SelectNodes("//div[@class='entry-content']/p/strong/img");
+
+                if (image != null)
+                {
+                    informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
+                }
+                else
+                {
+                    image = doc.GetElementbyId("primary").SelectNodes("//div[@class='entry-content']/p/img");
+                    if (image != null)
+                    {
+                        informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
+                    }
+                }
+                Regex regexAuteur = new Regex(@"Auteur\(s\):(.*?)\n");
+                informationNovel.Auteur = regexAuteur.Match(elementContenantSynopsis).Groups[1].Value.Trim(' ');
+                Regex regexResume = new Regex(@"Synopsis :([\s\S]*)Chapitres disponibles", RegexOptions.IgnoreCase);
+                informationNovel.Resume = regexResume.Match(elementContenantSynopsis).Groups[1].Value;
+                if (string.IsNullOrEmpty(informationNovel.Resume))
+                {
+                    regexResume = new Regex(@"Sypnopsis([\s\S]*)Sypnopsis officiel", RegexOptions.IgnoreCase);
+                    informationNovel.Resume = regexResume.Match(elementContenantSynopsis).Groups[1].Value;
+                }
+                if (string.IsNullOrEmpty(informationNovel.Resume))
+                {
+                    regexResume = new Regex(@"Synopsis([\s\S]*)Chapitres disponibles", RegexOptions.IgnoreCase);
+                    informationNovel.Resume = regexResume.Match(elementContenantSynopsis).Groups[1].Value;
+                }
+            }
+
+            return informationNovel;
         }
     }
 }
