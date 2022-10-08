@@ -62,14 +62,25 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 var htmlSite = client.DownloadString(lienPagechapitre);
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(htmlSite);
-                var test = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-3 is-style-default']/div/article/div/h2/a");
-                if (test == null)
+                var premierElement = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-3 is-style-default']/div/article/div/h2/a");
+                if (premierElement == null)
                 {
-                    test = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-4 is-style-default']/div/article/div/h2/a");
+                    premierElement = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-4 is-style-default']/div/article/div/h2/a");
+                    if (premierElement == null)
+                    {
+                        premierElement = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-4 is-style-default']/div/article/div/h3/a");
+                    }
                 }
-                var contenantListeChapitre = test.Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://"));
+                var contenantListeChapitre = premierElement.Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://")).ToList();
+                var deuxiemeElement = doc.GetElementbyId("content").SelectNodes("//div[@class='wp-block-newspack-blocks-homepage-articles is-style-default wpnbha ts-4 is-style-default']/div/article/div/h3/a");
+                if (deuxiemeElement != null)
+                {
+                    contenantListeChapitre.AddRange(deuxiemeElement.Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://")));
+                }
+
                 // group by pour enlever les doublons
-                return contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).GroupBy(x => x.LientHtml).Select(x => x.First()).Reverse();
+                return contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).
+                    GroupBy(x => x.LientHtml).Select(x => x.First()).Reverse();
             }
         }
 

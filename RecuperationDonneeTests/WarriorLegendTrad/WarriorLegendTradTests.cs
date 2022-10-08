@@ -13,7 +13,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         {
             List<string> listeLienErreur = new List<string>();
             IEnumerable<Novel> listeNovel = new WarriorLegendTrad().RecuperationListeNovel();
-            Assert.AreEqual(9, listeNovel.Count());
+            Assert.AreEqual(11, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
                 IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre(novel.LientHtmlSommaire);
@@ -36,6 +36,21 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
             {
                 Assert.Fail(string.Join(Environment.NewLine, listeLienErreur));
             }
+        }
+
+        [TestMethod]
+        public void RecuperationListeChapitreTestReincarnated()
+        {
+            IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2021/10/17/i-reincarnated-for-nothing/");
+            Assert.AreEqual(114, listechapitre.Count());
+        }
+
+        [TestMethod]
+        public void RecuperationListeChapitreTestTaming()
+        {
+
+            IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2021/11/30/taming-master/");
+            Assert.AreEqual(32, listechapitre.Count());
         }
 
         [TestMethod]
