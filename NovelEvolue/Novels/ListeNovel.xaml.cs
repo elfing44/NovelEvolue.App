@@ -26,8 +26,8 @@ public partial class ListeNovel : ContentPage
 
 	protected override void OnSizeAllocated(double width, double height)
 	{
-		this.Resources["tailleecran"] = DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density;
-		base.OnSizeAllocated(width, height);
+		this.Resources["tailleecran"] = Math.Round(DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density, 0);
+		base.OnSizeAllocated(Math.Round(width, 0), Math.Round(height, 0));
 	}
 
 	private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)

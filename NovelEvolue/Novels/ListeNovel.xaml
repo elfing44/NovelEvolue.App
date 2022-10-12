@@ -24,7 +24,7 @@
                             <ViewCell.View>
                                 <StackLayout Orientation="Horizontal"
                                              VerticalOptions="Center"
-                                             Margin="10,0,0,0">
+                                             Margin="10,5,0,5">
                                     <StackLayout Orientation="Horizontal"
                                                  VerticalOptions="Center"
                                                  HorizontalOptions ="Start"
