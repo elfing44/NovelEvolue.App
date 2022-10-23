@@ -79,9 +79,79 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 }
 
                 // group by pour enlever les doublons
-                return contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).
-                    GroupBy(x => x.LientHtml).Select(x => x.First()).Reverse();
+                List<Chapitre> listeChapitre = contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).
+                    GroupBy(x => x.LientHtml).Select(x => x.First()).ToList();
+                //Détermination sens 
+                if (!EstPremierChapitre(listeChapitre.First()))
+                {
+                    listeChapitre.Reverse();
+                }
+
+                listeChapitre.AddRange(RecuperationListeChapitreNonSommaire(listeChapitre.Last(), listeChapitre.Count));
+                return listeChapitre;
             }
+        }
+
+        /// <summary>
+        /// Détermine si le chapitre est le premier chapitre
+        /// </summary>
+        /// <param name="chapitre">chapitre a testé</param>
+        /// <returns>true si premier chapitre false sinon</returns>
+        private static bool EstPremierChapitre(Chapitre chapitre)
+        {
+            bool existeUnChapitrePrecedent = false;
+
+            using (WebClient client = new WebClient())
+            {
+                var htmlSite = client.DownloadString(chapitre.LientHtml);
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(htmlSite);
+
+                var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
+                existeUnChapitrePrecedent = elementNavigationSuivant != null && elementNavigationSuivant.First() != null && elementNavigationSuivant.First().GetAttributeValue("Href", string.Empty) != string.Empty;
+
+            }
+            return !existeUnChapitrePrecedent;
+        }
+
+
+        /// <summary>
+        /// Récupére les chapitres qui ne sont pas encore dans le somaire
+        /// </summary>
+        /// <param name="dernierChapitre">dernier chapitre du sommaire</param>
+        /// <returns>liste de chapitre qui ne sont pas dans le sommaire</returns>
+        private static List<Chapitre> RecuperationListeChapitreNonSommaire(Chapitre dernierChapitre, int nombre)
+        {
+            List<Chapitre> listeChapitre = new List<Chapitre>();
+            bool existeUnChapitreSuivant = true;
+
+            using (WebClient client = new WebClient())
+            {
+                string lienChapitreSUivant = dernierChapitre.LientHtml;
+                while (existeUnChapitreSuivant)
+                {
+                    var htmlSite = client.DownloadString(lienChapitreSUivant);
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(htmlSite);
+
+                    var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
+                    if (elementNavigationSuivant != null && elementNavigationSuivant.Last() != null)
+                    {
+                        lienChapitreSUivant = elementNavigationSuivant.Last().GetAttributeValue("Href", string.Empty);
+                        if (lienChapitreSUivant != string.Empty)
+                        {
+                            listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = string.Format("Chapitre {0}", nombre++) });
+                        }
+                        else
+                            existeUnChapitreSuivant = false;
+                    }
+                    else
+                        existeUnChapitreSuivant = false;
+                }
+
+
+            }
+            return listeChapitre;
         }
 
         public IEnumerable<Novel> RecuperationListeNovel()

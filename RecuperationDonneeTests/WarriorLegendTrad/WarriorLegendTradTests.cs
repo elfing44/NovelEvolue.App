@@ -42,7 +42,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         public void RecuperationListeChapitreTestReincarnated()
         {
             IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2021/10/17/i-reincarnated-for-nothing/");
-            Assert.AreEqual(114, listechapitre.Count());
+            Assert.AreEqual(122, listechapitre.Count());
         }
 
         [TestMethod]
