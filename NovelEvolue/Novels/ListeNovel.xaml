@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:tools="clr-namespace:NovelEvolue.Tools"
              x:Class="NovelEvolue.Novels.ListeNovel"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
              Title="ListeNovel">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Actualiser"
@@ -16,8 +17,7 @@
         <StackLayout>
             <ListView x:Name="ListeNovelView"
                       SelectionMode="Single"
-                      HasUnevenRows="True"
-                      RowHeight="-1">
+                      HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >

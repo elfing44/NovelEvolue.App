@@ -23,8 +23,7 @@
             <ListView x:Name="ListeChapitre"
                       SelectionMode="Single"
                       ItemsSource="{Binding }"
-                      HasUnevenRows="True"
-                      RowHeight="-1">
+                      HasUnevenRows="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
