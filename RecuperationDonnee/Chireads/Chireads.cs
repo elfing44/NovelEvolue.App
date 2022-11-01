@@ -110,6 +110,7 @@ namespace RecuperationDonnee.Chireads
             List<Novel> listeNovel = new List<Novel>();
             listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "1")));
             listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "2")));
+            listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "3")));
             listeNovel.AddRange(RecuperationListeNovelPage(LienRecuperationNovelOriginal));
             return listeNovel;
         }
