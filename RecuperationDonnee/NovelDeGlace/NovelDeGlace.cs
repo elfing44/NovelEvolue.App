@@ -82,17 +82,10 @@ namespace RecuperationDonnee.NovelDeGlace
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='content']");
             List<string> listeParagraphe = new List<string>();
 
-            listeParagraphe.Add("<html>");
-            listeParagraphe.Add("<body>");
-
-
             foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes))
             {
-                listeParagraphe.Add(balise.OuterHtml);
+                listeParagraphe.Add(balise.InnerHtml);
             }
-
-            listeParagraphe.Add("</body>");
-            listeParagraphe.Add("</html>");
 
             informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe);
             var image = doc.GetElementbyId("content").SelectNodes("//div[@class='su-column-inner su-clearfix']/img");
