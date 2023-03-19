@@ -130,6 +130,12 @@ namespace RecuperationDonnee.HarkenEliwood
                 return regexAuteur.Match(text).Groups[1].Value;
             }
 
+            regexAuteur = new Regex(@"Autheur :(.*?)\n");
+            if (!string.IsNullOrEmpty(regexAuteur.Match(text).Groups[1].Value))
+            {
+                return regexAuteur.Match(text).Groups[1].Value;
+            }
+
             return string.Empty;
         }
 
@@ -152,6 +158,12 @@ namespace RecuperationDonnee.HarkenEliwood
             if (string.IsNullOrEmpty(resume))
             {
                 regexResume = new Regex(@"Synopsis :([\s\S]*)Prélude", RegexOptions.IgnoreCase);
+                resume = regexResume.Match(text).Groups[1].Value;
+            }
+
+            if (string.IsNullOrEmpty(resume))
+            {
+                regexResume = new Regex(@"Synospis :([\s\S]*)Original ", RegexOptions.IgnoreCase);
                 resume = regexResume.Match(text).Groups[1].Value;
             }
 
