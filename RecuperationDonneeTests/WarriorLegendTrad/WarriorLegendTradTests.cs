@@ -17,6 +17,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
             foreach (Novel novel in listeNovel)
             {
                 IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre(novel.LientHtmlSommaire);
+                //listeLienErreur.Add(listechapitre.Count() + " - " + novel.LientHtmlSommaire);
                 foreach (Chapitre chapitre in listechapitre)
                 {
                     Assert.IsFalse(string.IsNullOrEmpty(chapitre.Libelle));
@@ -42,7 +43,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         public void RecuperationListeChapitreTestReincarnated()
         {
             IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2021/10/17/i-reincarnated-for-nothing/");
-            Assert.AreEqual(122, listechapitre.Count());
+            Assert.AreEqual(130, listechapitre.Count());
         }
 
         [TestMethod]
@@ -50,7 +51,15 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         {
 
             IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2021/11/30/taming-master/");
-            Assert.AreEqual(32, listechapitre.Count());
+            Assert.AreEqual(35, listechapitre.Count());
+        }
+
+        [TestMethod]
+        public void RecuperationListeChapitreTestPoisson()
+        {
+
+            IEnumerable<Chapitre> listechapitre = new WarriorLegendTrad().RecuperationListeChapitre("https://warriorlegendtrad.fr/2022/07/12/jetais-un-petit-poisson-quand-je-me-suis-reincarne-mais-il-semble-que-je-puisse-devenir-un-dragon-alors-je-ferai-de-mon-mieux/");
+            Assert.AreEqual(25, listechapitre.Count());
         }
 
         [TestMethod]
