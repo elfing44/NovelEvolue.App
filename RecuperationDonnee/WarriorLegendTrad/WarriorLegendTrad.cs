@@ -62,17 +62,9 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 var htmlSite = client.DownloadString(lienPagechapitre);
                 HtmlDocument doc = new HtmlDocument();
                 doc.LoadHtml(htmlSite);
-                var premierElement = doc.GetElementbyId("content").SelectNodes("//div/div/article/div/h2/a");
-                if (premierElement == null)
-                {
-                    premierElement = doc.GetElementbyId("content").SelectNodes("//div/div/article/div/h3/a");
-                }
+                var premierElement = doc.GetElementbyId("content").SelectNodes("//div/div/article/div/h2/a | //div/div/article/div/h3/a");
+
                 var contenantListeChapitre = premierElement.Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://")).ToList();
-                var deuxiemeElement = doc.GetElementbyId("content").SelectNodes("//div/div/article/div/h3/a");
-                if (deuxiemeElement != null)
-                {
-                    contenantListeChapitre.AddRange(deuxiemeElement.Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://")));
-                }
 
                 // group by pour enlever les doublons
                 List<Chapitre> listeChapitre = contenantListeChapitre.Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) }).
