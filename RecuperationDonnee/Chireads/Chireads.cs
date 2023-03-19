@@ -45,6 +45,10 @@ namespace RecuperationDonnee.Chireads
             doc.LoadHtml(doc.Text.Replace("</strong> <strong>", " "));
 
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//*[@id='content']/p");
+            if (listeBaliseDivTexte == null)
+            {
+                listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//*[@id='novel']/p");
+            }
             var listeBaliseDivTitre = doc.GetElementbyId("content").SelectNodes("//div[@class='font-color-black3 article-title']");
 
             List<string> listeParagraphe = new List<string>();

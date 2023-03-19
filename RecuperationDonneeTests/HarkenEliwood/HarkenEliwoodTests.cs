@@ -12,7 +12,7 @@ namespace RecuperationDonnee.HarkenEliwood.Tests
         public void RecuperationListeNovelTest()
         {
             IEnumerable<Novel> listeNovel = new HarkenEliwood().RecuperationListeNovel();
-            Assert.AreEqual(10, listeNovel.Count());
+            Assert.AreEqual(11, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
                 IEnumerable<Chapitre> listechapitre = new HarkenEliwood().RecuperationListeChapitre(novel.LientHtmlSommaire);

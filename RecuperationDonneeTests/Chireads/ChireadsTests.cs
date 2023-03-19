@@ -13,7 +13,7 @@ namespace RecuperationDonnee.Chireads.Tests
         {
             List<string> listeLienErreur = new List<string>();
             IEnumerable<Novel> listeNovel = new Chireads().RecuperationListeNovel();
-            Assert.AreEqual(81, listeNovel.Count());
+            Assert.AreEqual(91, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
                 IEnumerable<Chapitre> listechapitre = new Chireads().RecuperationListeChapitre(novel.LientHtmlSommaire);
@@ -38,11 +38,17 @@ namespace RecuperationDonnee.Chireads.Tests
             }
         }
 
+        [TestMethod]
+        public void RecuperationChapitreTestLaNouvell()
+        {
+            new Chireads().RecuperationChapitre("https://chireads.com/translatedtales/lord-baby-runs-a-romance-fantasy-with-cash/chapitre-8-9/2023/02/27/", true);
+        }
+
         [TestMethod()]
         public void RecuperationListeChapitreTest()
         {
             IEnumerable<Chapitre> listeChapitre = new Chireads().RecuperationListeChapitre(@"https://chireads.com/category/translatedtales/dragon-marked-war-god/");
-            Assert.AreEqual(195, listeChapitre.Count());
+            Assert.AreEqual(226, listeChapitre.Count());
         }
 
         [TestMethod]

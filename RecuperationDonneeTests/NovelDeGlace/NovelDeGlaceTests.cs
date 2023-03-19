@@ -12,7 +12,7 @@ namespace RecuperationDonnee.NovelDeGlace.Tests
         public void RecuperationListeNovelTest()
         {
             IEnumerable<Novel> listeNovel = new NovelDeGlace().RecuperationListeNovel();
-            Assert.AreEqual(72, listeNovel.Count());
+            Assert.AreEqual(73, listeNovel.Count());
             foreach (Novel novel in listeNovel)
             {
                 IEnumerable<Chapitre> listechapitre = new NovelDeGlace().RecuperationListeChapitre(novel.LientHtmlSommaire);
@@ -27,7 +27,7 @@ namespace RecuperationDonnee.NovelDeGlace.Tests
         public void RecuperationListeChapitreTest()
         {
             IEnumerable<Chapitre> listeChapitre = new NovelDeGlace().RecuperationListeChapitre(@"https://noveldeglace.com/roman/genjitsushugisha-no-oukokukaizouki/");
-            Assert.AreEqual(235, listeChapitre.Count());
+            Assert.AreEqual(242, listeChapitre.Count());
         }
 
         [TestMethod]
