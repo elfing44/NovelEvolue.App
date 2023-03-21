@@ -83,27 +83,28 @@ namespace RecuperationDonnee.Xiaowaz
         private static List<Chapitre> RecuperationListeChapitreNonSommaire(Chapitre dernierChapitre)
         {
             HtmlWeb web = new HtmlWeb();
-            bool existeUnChapitreSuivant = true;
             List<Chapitre> listeChapitre = new List<Chapitre>();
             if (dernierChapitre != null)
             {
-                string lienChapitreSUivant = dernierChapitre.LientHtml;
-                while (existeUnChapitreSuivant)
+                string lienChapitreSuivant = dernierChapitre.LientHtml;
+                while (!string.IsNullOrEmpty(lienChapitreSuivant))
                 {
-                    HtmlDocument doc = web.Load(lienChapitreSUivant);
-                    var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-post-navigation-next']");
-                    if (elementNavigationSuivant != null && elementNavigationSuivant.First() != null && elementNavigationSuivant.First().Element("a") != null)
+                    HtmlDocument doc = web.Load(lienChapitreSuivant);
+                    string elementNavigationSuivant = doc.GetElementbyId("content")?.SelectSingleNode("//*[@class='wp-post-navigation-next']//a[@href]")?.Attributes["href"]?.Value;
+                    if (!string.IsNullOrEmpty(elementNavigationSuivant))
                     {
-                        lienChapitreSUivant = elementNavigationSuivant.First().Element("a").GetAttributeValue("Href", string.Empty);
-                        if (lienChapitreSUivant != string.Empty)
-                        {
-                            listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = MiseEnFormeTexteChapitre(elementNavigationSuivant.First().InnerText) });
-                        }
-                        else
-                            existeUnChapitreSuivant = false;
+                        listeChapitre.Add(
+                            new Chapitre()
+                            {
+                                LientHtml = elementNavigationSuivant,
+                                Libelle = MiseEnFormeTexteChapitre(doc.GetElementbyId("content").SelectSingleNode("//*[@class='wp-post-navigation-next']").InnerText)
+                            });
+                        lienChapitreSuivant = elementNavigationSuivant;
                     }
                     else
-                        existeUnChapitreSuivant = false;
+                    {
+                        lienChapitreSuivant = null;
+                    }
                 }
             }
             return listeChapitre;
