@@ -117,14 +117,21 @@ namespace RecuperationDonnee.Xiaowaz
         /// <returns>liste de novel</returns>
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(LienRecuperationNovel);
-            var entetePage = doc.GetElementbyId("primary-menu");
-            // Récupération des séries
-            var elementOngletSerie = entetePage.Descendants().Where(x => x.GetAttributeValue("class", string.Empty) == _classeSerie || x.GetAttributeValue("class", string.Empty) == _classeCreation || x.GetAttributeValue("class", string.Empty) == _classeAbandonner);
-            var elementDansOngletSerie = elementOngletSerie.Select(x => x.Element("ul")).SelectMany(x => x.ChildNodes);
-            var listeSerie = elementDansOngletSerie.Select(x => x.Element("a")).Where(x => x != null);
-            return listeSerie.Select(x => new Novel() { LientHtmlSommaire = x.GetAttributeValue("href", string.Empty), Titre = RemplacerEspaceIncecable(x.InnerText) });
+            return new HtmlWeb()
+                .Load(LienRecuperationNovel)
+                .GetElementbyId("primary-menu")
+                .Descendants()
+                .Where(x => new[] { _classeSerie, _classeCreation, _classeAbandonner }.Contains(x.GetAttributeValue("class", string.Empty)))
+                .SelectMany(x => x.Element("ul").ChildNodes)
+                .Select(x => x.Element("a"))
+                .Where(x => x != null)
+                .Select(x =>
+                new Novel
+                {
+                    LientHtmlSommaire = x.GetAttributeValue("href", string.Empty),
+                    Titre = RemplacerEspaceIncecable(x.InnerText)
+                }
+            );
         }
 
         private static string RemplacerEspaceIncecable(string text)
