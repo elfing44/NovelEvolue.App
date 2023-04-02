@@ -118,25 +118,34 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 string lienChapitreSUivant = dernierChapitre.LientHtml;
                 while (existeUnChapitreSuivant)
                 {
-                    var htmlSite = client.DownloadString(lienChapitreSUivant);
-                    HtmlDocument doc = new HtmlDocument();
-                    doc.LoadHtml(htmlSite);
-
-                    var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
-                    if (elementNavigationSuivant != null && elementNavigationSuivant.Last() != null)
+                    try
                     {
-                        lienChapitreSUivant = elementNavigationSuivant.Last().GetAttributeValue("Href", string.Empty);
-                        if (lienChapitreSUivant != string.Empty)
+                        var htmlSite = client.DownloadString(lienChapitreSUivant);
+                        HtmlDocument doc = new HtmlDocument();
+                        doc.LoadHtml(htmlSite);
+
+                        var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
+                        if (elementNavigationSuivant != null && elementNavigationSuivant.Last() != null)
                         {
-                            listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = string.Format("Chapitre {0}", nombre++) });
+                            lienChapitreSUivant = elementNavigationSuivant.Last().GetAttributeValue("Href", string.Empty);
+                            if (lienChapitreSUivant != string.Empty)
+                            {
+                                listeChapitre.Add(new Chapitre() { LientHtml = lienChapitreSUivant, Libelle = string.Format("Chapitre {0}", nombre++) });
+                            }
+                            else
+                                existeUnChapitreSuivant = false;
                         }
                         else
+                        {
                             existeUnChapitreSuivant = false;
+                        }
                     }
-                    else
+                    catch
+                    {
                         existeUnChapitreSuivant = false;
+                        listeChapitre.RemoveAt(listeChapitre.Count - 1);
+                    }
                 }
-
 
             }
             return listeChapitre;
