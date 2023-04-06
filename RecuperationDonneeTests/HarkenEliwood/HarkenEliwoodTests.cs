@@ -33,14 +33,14 @@ namespace RecuperationDonnee.HarkenEliwood.Tests
         [TestMethod()]
         public void RecuperationChapitreTest()
         {
-            var chapitre = new HarkenEliwood().RecuperationChapitre("https://harkeneliwood.wordpress.com/2017/04/17/shikkaku-mon-no-saikyou-kenja-episode-1/", true);
+            new HarkenEliwood().RecuperationChapitre("https://harkeneliwood.wordpress.com/2017/04/17/shikkaku-mon-no-saikyou-kenja-episode-1/", true);
         }
 
 
         [TestMethod]
         public void RecupererInformationNovelTest()
         {
-            List<string> listeInfos = new List<string>();
+            List<string> listeInfos = new();
             IEnumerable<Novel> listeNovel = new HarkenEliwood().RecuperationListeNovel();
             foreach (Novel novel in listeNovel)
             {

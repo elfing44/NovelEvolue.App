@@ -40,6 +40,6 @@ namespace RecuperationDonnee
         /// <returns></returns>
         InformationNovel RecupererInformationNovel(string lienPageIntroduction);
 
-        SiteEnum siteEnum { get; }
+        SiteEnum SiteEnum { get; }
     }
 }

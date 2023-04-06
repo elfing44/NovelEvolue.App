@@ -13,11 +13,11 @@ namespace RecuperationDonnee.Chireads
     public class Chireads : ISite
     {
         public string LienRecuperationNovel => @"https://chireads.com/category/translatedtales/page/{0}";
-        public string LienRecuperationNovelOriginal => @"https://chireads.com/category/original/";
+        private const string LienRecuperationNovelOriginal = @"https://chireads.com/category/original/";
 
-        public SiteEnum siteEnum { get => SiteEnum.Chireads; }
+        public SiteEnum SiteEnum { get => SiteEnum.Chireads; }
 
-        public List<string> listeLienARetirer = new List<string>()
+        public List<string> listeLienARetirer = new()
         {
             "https://chireads.com/translatedtales/le-monde-des-mages/passage-a-1-chap-jour-jusqua-nouvel-ordre-et-bonus-sur-tipeee/2021/05/21/",
             "https://chireads.com/translatedtales/la-renaissance-dun-maitre-demoniaque/en-raison-dun-probleme-technique-deathmanorangel-ne-pourra-pas-publier-de-chapitre-cette-semaine-nous-nous-excusons-pour-la-gene-occasionnee/2020/09/15/",
@@ -39,19 +39,16 @@ namespace RecuperationDonnee.Chireads
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienChapitre);
             doc.LoadHtml(doc.Text.Replace("</i> <i>", " "));
             doc.LoadHtml(doc.Text.Replace("</strong> <strong>", " "));
 
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//*[@id='content']/p");
-            if (listeBaliseDivTexte == null)
-            {
-                listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//*[@id='novel']/p");
-            }
+            listeBaliseDivTexte ??= doc.GetElementbyId("content").SelectNodes("//*[@id='novel']/p");
             var listeBaliseDivTitre = doc.GetElementbyId("content").SelectNodes("//div[@class='font-color-black3 article-title']");
 
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             if (html)
             {
@@ -70,7 +67,7 @@ namespace RecuperationDonnee.Chireads
                 {
                     if (html)
                     {
-                        Regex rg = new Regex("style=\"(.*)\"");
+                        Regex rg = new("style=\"(.*)\"");
                         listeParagraphe.Add("<p>" + rg.Replace(balise.OuterHtml, "") + "</p>");
                     }
                     else
@@ -89,7 +86,7 @@ namespace RecuperationDonnee.Chireads
 
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPagechapitre);
             try
             {
@@ -101,17 +98,15 @@ namespace RecuperationDonnee.Chireads
                     Libelle = System.Net.WebUtility.HtmlDecode(x.GetAttributeValue("title", string.Empty))
                 }).Where(x => !listeLienARetirer.Contains(x.LientHtml));
             }
-#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
             }
-#pragma warning restore CA1031 // Do not catch general exception types
             return new List<Chapitre>();
         }
 
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            List<Novel> listeNovel = new List<Novel>();
+            List<Novel> listeNovel = new();
             listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "1")));
             listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "2")));
             listeNovel.AddRange(RecuperationListeNovelPage(string.Format(CultureInfo.InvariantCulture, LienRecuperationNovel, "3")));
@@ -121,7 +116,7 @@ namespace RecuperationDonnee.Chireads
 
         private static IEnumerable<Novel> RecuperationListeNovelPage(string page)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(page);
             var contenantListeNovel = doc.GetElementbyId("content");
             var listeNovel = contenantListeNovel.SelectNodes("//*[@class='font-color-black3']").Descendants().Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0);
@@ -130,13 +125,13 @@ namespace RecuperationDonnee.Chireads
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel informationNovel = new InformationNovel();
-            HtmlWeb web = new HtmlWeb();
+            InformationNovel informationNovel = new();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPageIntroduction);
             doc.LoadHtml(doc.Text.Replace("</i> <i>", " "));
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='inform-inform-txt']/div[@class='inform-txt-show font-color-black6']");
 
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes).Where(x => !string.IsNullOrEmpty(x.InnerHtml)))
             {
@@ -145,10 +140,10 @@ namespace RecuperationDonnee.Chireads
 
             informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe).Replace("<br>", Environment.NewLine).Trim(Environment.NewLine.ToArray());
             var image = doc.GetElementbyId("content").SelectNodes("//div[@class='inform-product']/img");
-            Regex regexAuteur = new Regex("Auteur : (.*?)&nbsp;");
+            Regex regexAuteur = new("Auteur : (.*?)&nbsp;");
             informationNovel.Auteur = regexAuteur.Match(doc.Text).Groups[1].Value;
 
-            Regex regexTraducteur = new Regex("Fantrad : (.*?)&nbsp;");
+            Regex regexTraducteur = new("Fantrad : (.*?)&nbsp;");
             informationNovel.TraducteurFR = regexTraducteur.Match(doc.Text).Groups[1].Value;
             if (string.IsNullOrEmpty(informationNovel.TraducteurFR))
             {

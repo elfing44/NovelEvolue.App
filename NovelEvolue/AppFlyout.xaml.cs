@@ -18,8 +18,7 @@ public partial class AppFlyout : FlyoutPage
 
     void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var item = e.CurrentSelection.FirstOrDefault() as FlyoutPageItem;
-        if (item != null)
+        if (e.CurrentSelection.FirstOrDefault() is FlyoutPageItem item)
         {
             Detail = new NavigationPage(new ListeNovel(item.SiteType, item.Title));
             if (DeviceInfo.Current.Platform == DevicePlatform.Android)

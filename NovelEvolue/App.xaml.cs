@@ -15,10 +15,7 @@ public partial class App : Application
     {
         get
         {
-            if (_database == null)
-            {
-                _database = new NovelDAL(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Novel.db3"));
-            }
+            _database ??= new NovelDAL(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Novel.db3"));
             return _database;
         }
     }

@@ -12,106 +12,106 @@ namespace NovelEvolue.Novels;
 
 public partial class ListeNovel : ContentPage
 {
-	SiteEnum _site;
+    private readonly SiteEnum _site;
 
-	public ListeNovel(SiteEnum site, string title)
-	{
-		this.Resources.Add("tailleecran", DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density);
-		InitializeComponent();
-		_site = site;
-		AlimenterListeNovel();
-		ListeNovelView.ItemSelected += ListeNovelView_ItemSelected;
-		Title = title;
-	}
+    public ListeNovel(SiteEnum site, string title)
+    {
+        this.Resources.Add("tailleecran", DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density);
+        InitializeComponent();
+        _site = site;
+        AlimenterListeNovel();
+        ListeNovelView.ItemSelected += ListeNovelView_ItemSelected;
+        Title = title;
+    }
 
-	protected override void OnSizeAllocated(double width, double height)
-	{
-		this.Resources["tailleecran"] = Math.Round(DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density, 0);
-		base.OnSizeAllocated(Math.Round(width, 0), Math.Round(height, 0));
-	}
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        this.Resources["tailleecran"] = Math.Round(DeviceDisplay.MainDisplayInfo.Width / DeviceDisplay.MainDisplayInfo.Density, 0);
+        base.OnSizeAllocated(Math.Round(width, 0), Math.Round(height, 0));
+    }
 
-	private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-	{
-		if (e.SelectedItem != null)
-		{
-			Navigation.PushModalAsync(new NavigationPage(new SaisieListeChapitre(DonnerSite(), (NovelView)e.SelectedItem)));
-			ListeNovelView.SelectedItem = null;
-		}
-	}
+    private void ListeNovelView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        if (e.SelectedItem != null)
+        {
+            Navigation.PushModalAsync(new NavigationPage(new SaisieListeChapitre(DonnerSite(), (NovelView)e.SelectedItem)));
+            ListeNovelView.SelectedItem = null;
+        }
+    }
 
-	public void AlimenterListeNovel()
-	{
-		ISite site = DonnerSite();
+    public void AlimenterListeNovel()
+    {
+        ISite site = DonnerSite();
 
-		IEnumerable<Novel> listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
-		if (listeNovel == null || !listeNovel.Any())
-		{
-			listeNovel = site.RecuperationListeNovel();
-			foreach (Novel novel in listeNovel)
-			{
-				App.Database.SauverNovel(novel, site.siteEnum);
-			}
-			// pour avoir les ids a jour des novels
-			listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
-		}
-		ObservableCollection<NovelView> listeNovelView = new ObservableCollection<NovelView>(listeNovel.Select(x => TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
-		ListeNovelView.ItemsSource = listeNovelView;
-	}
+        IEnumerable<Novel> listeNovel = App.Database.ChargerListeNovel(site.SiteEnum);
+        if (listeNovel == null || !listeNovel.Any())
+        {
+            listeNovel = site.RecuperationListeNovel();
+            foreach (Novel novel in listeNovel)
+            {
+                App.Database.SauverNovel(novel, site.SiteEnum);
+            }
+            // pour avoir les ids a jour des novels
+            listeNovel = App.Database.ChargerListeNovel(site.SiteEnum);
+        }
+        ObservableCollection<NovelView> listeNovelView = new(listeNovel.Select(x => TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
+        ListeNovelView.ItemsSource = listeNovelView;
+    }
 
-	private NovelView TransformerNovelEnNovelView(Novel novel)
-	{
-		return new NovelView()
-		{
-			LienHtml = novel.LientHtmlSommaire,
-			Titre = novel.Titre,
-			NombreChapitre = novel.NombreChapitre,
-			NombreChapitreLu = novel.NombreChapitreLu
-		};
-	}
+    private static NovelView TransformerNovelEnNovelView(Novel novel)
+    {
+        return new NovelView()
+        {
+            LienHtml = novel.LientHtmlSommaire,
+            Titre = novel.Titre,
+            NombreChapitre = novel.NombreChapitre,
+            NombreChapitreLu = novel.NombreChapitreLu
+        };
+    }
 
-	private ISite DonnerSite()
-	{
-		ISite site = null;
-		switch (_site)
-		{
-			case SiteEnum.Xiaowaz:
-				site = new Xiaowaz();
-				break;
-			case SiteEnum.HarkenEliwwoof:
-				site = new HarkenEliwood();
-				break;
-			case SiteEnum.Chireads:
-				site = new Chireads();
-				break;
-			case SiteEnum.WuxiaLNScantrad:
-				site = new WuxiaLNScantrad();
-				break;
-			case SiteEnum.NovelDeGlace:
-				site = new NovelDeGlace();
-				break;
-			case SiteEnum.WarriorLegendTrad:
-				site = new WarriorLegendTrad();
-				break;
-		}
-		return site;
-	}
+    private ISite DonnerSite()
+    {
+        ISite site = null;
+        switch (_site)
+        {
+            case SiteEnum.Xiaowaz:
+                site = new Xiaowaz();
+                break;
+            case SiteEnum.HarkenEliwwoof:
+                site = new HarkenEliwood();
+                break;
+            case SiteEnum.Chireads:
+                site = new Chireads();
+                break;
+            case SiteEnum.WuxiaLNScantrad:
+                site = new WuxiaLNScantrad();
+                break;
+            case SiteEnum.NovelDeGlace:
+                site = new NovelDeGlace();
+                break;
+            case SiteEnum.WarriorLegendTrad:
+                site = new WarriorLegendTrad();
+                break;
+        }
+        return site;
+    }
 
-	private void ToolbarItem_Clicked(object sender, EventArgs e)
-	{
-		ListeNovelView.IsRefreshing = true;
-		ISite site = DonnerSite();
+    private void ToolbarItem_Clicked(object sender, EventArgs e)
+    {
+        ListeNovelView.IsRefreshing = true;
+        ISite site = DonnerSite();
 
-		IEnumerable<Novel> listeNovel = site.RecuperationListeNovel();
-		foreach (Novel novel in listeNovel)
-		{
-			App.Database.SauverNovel(novel, site.siteEnum);
-		}
+        IEnumerable<Novel> listeNovel = site.RecuperationListeNovel();
+        foreach (Novel novel in listeNovel)
+        {
+            App.Database.SauverNovel(novel, site.SiteEnum);
+        }
 
-		App.Database.SupprimerNovel(listeNovel.ToList(), site.siteEnum);
+        App.Database.SupprimerNovel(listeNovel.ToList(), site.SiteEnum);
 
-		listeNovel = App.Database.ChargerListeNovel(site.siteEnum);
-		ObservableCollection<NovelView> listeNovelView = new ObservableCollection<NovelView>(listeNovel.Select(x => TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
-		ListeNovelView.ItemsSource = listeNovelView;
-		ListeNovelView.IsRefreshing = false;
-	}
+        listeNovel = App.Database.ChargerListeNovel(site.SiteEnum);
+        ObservableCollection<NovelView> listeNovelView = new(listeNovel.Select(x => ListeNovel.TransformerNovelEnNovelView(x)).OrderBy(x => x.Titre));
+        ListeNovelView.ItemsSource = listeNovelView;
+        ListeNovelView.IsRefreshing = false;
+    }
 }

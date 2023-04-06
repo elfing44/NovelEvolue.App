@@ -11,7 +11,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         [TestMethod]
         public void RecuperationListeNovelTest()
         {
-            List<string> listeLienErreur = new List<string>();
+            List<string> listeLienErreur = new();
             IEnumerable<Novel> listeNovel = new WarriorLegendTrad().RecuperationListeNovel();
             Assert.AreEqual(11, listeNovel.Count());
             foreach (Novel novel in listeNovel)
@@ -65,7 +65,7 @@ namespace RecuperationDonnee.WarriorLegendTrad.Tests
         [TestMethod]
         public void RecupererInformationNovelTest()
         {
-            List<string> listeInfos = new List<string>();
+            List<string> listeInfos = new();
             IEnumerable<Novel> listeNovel = new WarriorLegendTrad().RecuperationListeNovel();
             foreach (Novel novel in listeNovel)
             {

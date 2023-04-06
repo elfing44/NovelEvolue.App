@@ -17,14 +17,14 @@ namespace NovelEvolue.BDD
         public void SauverNovel(Novel novel, SiteEnum siteEnum)
         {
             //Transformation de  Novel en novel BDD
-            NovelBDD novelBDD = new NovelBDD() { LientHtmlSommaire = novel.LientHtmlSommaire, Titre = novel.Titre, Site = siteEnum };
+            NovelBDD novelBDD = new() { LientHtmlSommaire = novel.LientHtmlSommaire, Titre = novel.Titre, Site = siteEnum };
             NovelBDD novelBDDPrecedent = _database.Table<NovelBDD>().ToList().FirstOrDefault(x => novel.LientHtmlSommaire == x.LientHtmlSommaire);
             //Récupération du Guid si existe déja en BDD ou en met un nouveau
             novelBDD.NombreChapitre = novelBDDPrecedent?.NombreChapitre ?? 0;
             novelBDD.NombreChapitreLu = novelBDDPrecedent?.NombreChapitreLu ?? 0;
 
             //Transformation de la liste des chapitres en chapitre BDD
-            List<ChapitreBDD> listeChapitreBDD = new List<ChapitreBDD>();
+            List<ChapitreBDD> listeChapitreBDD = new();
             if (novel.ListeChapitre != null)
             {
                 novelBDD.NombreChapitre = novel.ListeChapitre.Count;
@@ -84,10 +84,10 @@ namespace NovelEvolue.BDD
         }
 
         /// <summary>
-        /// Charge un novel en fonction de son id
+        /// Charge un novel par son id
         /// </summary>
-        /// <param name="titre"></param>
-        /// <returns></returns>
+        /// <param name="id">id du novel</param>
+        /// <returns>novel</returns>
         public Novel ChargerNovel(string id)
         {
             NovelBDD novelBdd = _database.Table<NovelBDD>().FirstOrDefault(x => x.LientHtmlSommaire == id);
@@ -97,8 +97,8 @@ namespace NovelEvolue.BDD
 
             // transformation du novel BDD en novel
 
-            Novel novel = TransformerNovelBDDEnNovel(novelBdd);
-            List<RecuperationDonnee.Chapitre> listeChapitre = new List<RecuperationDonnee.Chapitre>();
+            Novel novel = NovelDAL.TransformerNovelBDDEnNovel(novelBdd);
+            List<RecuperationDonnee.Chapitre> listeChapitre = new();
             foreach (var chapitreBDD in listeChapitreBDD)
             {
                 listeChapitre.Add(new RecuperationDonnee.Chapitre() { Libelle = chapitreBDD.Libelle, LientHtml = chapitreBDD.LientHtml, Texte = chapitreBDD.Texte, Estlu = chapitreBDD.EstLu });
@@ -115,7 +115,7 @@ namespace NovelEvolue.BDD
             return listeNovelBdd.Select(x => TransformerNovelBDDEnNovel(x)).ToList();
         }
 
-        private Novel TransformerNovelBDDEnNovel(NovelBDD novel)
+        private static Novel TransformerNovelBDDEnNovel(NovelBDD novel)
         {
             return new Novel() { LientHtmlSommaire = novel.LientHtmlSommaire, Titre = novel.Titre, NombreChapitre = novel.NombreChapitre, NombreChapitreLu = novel.NombreChapitreLu };
         }

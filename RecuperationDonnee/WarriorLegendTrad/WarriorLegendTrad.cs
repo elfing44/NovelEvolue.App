@@ -11,18 +11,18 @@ namespace RecuperationDonnee.WarriorLegendTrad
     {
         public string LienRecuperationNovel => @"https://warriorlegendtrad.fr/light-novel/";
 
-        public SiteEnum siteEnum => SiteEnum.WarriorLegendTrad;
+        public SiteEnum SiteEnum => SiteEnum.WarriorLegendTrad;
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(lienChapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
 
-                List<string> listeParagraphe = new List<string>();
+                List<string> listeParagraphe = new();
 
                 if (html)
                 {
@@ -57,10 +57,10 @@ namespace RecuperationDonnee.WarriorLegendTrad
 
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(lienPagechapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var premierElement = doc.GetElementbyId("content").SelectNodes("//div/div/article/div/h2/a | //div/div/article/div/h3/a");
 
@@ -89,10 +89,10 @@ namespace RecuperationDonnee.WarriorLegendTrad
         {
             bool existeUnChapitrePrecedent = false;
 
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(chapitre.LientHtml);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
 
                 var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
@@ -110,10 +110,10 @@ namespace RecuperationDonnee.WarriorLegendTrad
         /// <returns>liste de chapitre qui ne sont pas dans le sommaire</returns>
         private static List<Chapitre> RecuperationListeChapitreNonSommaire(Chapitre dernierChapitre, int nombre)
         {
-            List<Chapitre> listeChapitre = new List<Chapitre>();
+            List<Chapitre> listeChapitre = new();
             bool existeUnChapitreSuivant = true;
 
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 string lienChapitreSUivant = dernierChapitre.LientHtml;
                 while (existeUnChapitreSuivant)
@@ -121,7 +121,7 @@ namespace RecuperationDonnee.WarriorLegendTrad
                     try
                     {
                         var htmlSite = client.DownloadString(lienChapitreSUivant);
-                        HtmlDocument doc = new HtmlDocument();
+                        HtmlDocument doc = new();
                         doc.LoadHtml(htmlSite);
 
                         var elementNavigationSuivant = doc.GetElementbyId("content").SelectNodes("//*[@class='wp-block-button__link wp-element-button']");
@@ -153,10 +153,10 @@ namespace RecuperationDonnee.WarriorLegendTrad
 
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(LienRecuperationNovel);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var entetePage = doc.GetElementbyId("menu-primary");
                 // Récupération des séries
@@ -169,14 +169,14 @@ namespace RecuperationDonnee.WarriorLegendTrad
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel informationNovel = new InformationNovel();
+            InformationNovel informationNovel = new();
 
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
 
                 var htmlSite = client.DownloadString(lienPageIntroduction);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var image = doc.GetElementbyId("content").SelectNodes("//div[@class='site-content']/section/main/article/figure/img");
 
@@ -185,7 +185,7 @@ namespace RecuperationDonnee.WarriorLegendTrad
                 var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
                 string elementContenantSynopsis = string.Join(Environment.NewLine, listeBaliseDivTexte.Select(x => WebUtility.HtmlDecode(x.InnerText)));
 
-                Regex regexResume = new Regex(@"Synopsis :([\s\S]*)index chapitre :", RegexOptions.IgnoreCase);
+                Regex regexResume = new(@"Synopsis :([\s\S]*)index chapitre :", RegexOptions.IgnoreCase);
 
                 informationNovel.Auteur = WebUtility.HtmlDecode(RecupererAuteur(doc)).Trim(' ');
                 informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
@@ -198,7 +198,7 @@ namespace RecuperationDonnee.WarriorLegendTrad
 
         private static string RecupererAuteur(HtmlDocument doc)
         {
-            Regex regexAuteur = new Regex(@"<p><strong>Auteur&nbsp;:</strong> <a(.*?)></a><a(.*?)>(.*?)</a></p>");
+            Regex regexAuteur = new(@"<p><strong>Auteur&nbsp;:</strong> <a(.*?)></a><a(.*?)>(.*?)</a></p>");
             if (regexAuteur.Match(doc.Text).Groups.Count == 4 && !string.IsNullOrEmpty(regexAuteur.Match(doc.Text).Groups[3].Value))
             {
                 return regexAuteur.Match(doc.Text).Groups[3].Value.Trim(' ');

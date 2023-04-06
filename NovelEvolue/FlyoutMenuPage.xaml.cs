@@ -13,7 +13,7 @@ public partial class FlyoutMenuPage : ContentPage
 
     private void AlimentaterListeSite()
     {
-        ObservableCollection<FlyoutPageItem> listeSite = new ObservableCollection<FlyoutPageItem>()
+        ObservableCollection<FlyoutPageItem> listeSite = new()
             {
                 new FlyoutPageItem() { Title = "Xiaowaz" , SiteType = SiteEnum.Xiaowaz, IconSource="xiaowaz.png"},
                 new FlyoutPageItem() { Title = "Novel de Glace", SiteType = SiteEnum.NovelDeGlace, IconSource="novelglace.png" },

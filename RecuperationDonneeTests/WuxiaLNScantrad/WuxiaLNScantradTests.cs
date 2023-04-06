@@ -11,7 +11,7 @@ namespace RecuperationDonnee.WuxiaLNScantrad.Tests
         [TestMethod]
         public void RecupererInformationNovelTest()
         {
-            List<string> listeInfos = new List<string>();
+            List<string> listeInfos = new();
             IEnumerable<Novel> listeNovel = new WuxiaLNScantrad().RecuperationListeNovel();
             foreach (Novel novel in listeNovel)
             {

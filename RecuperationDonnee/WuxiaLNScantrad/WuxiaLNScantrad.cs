@@ -11,18 +11,18 @@ namespace RecuperationDonnee.WuxiaLNScantrad
     {
         public string LienRecuperationNovel => @"https://wuxialnscantrad.wordpress.com";
 
-        public SiteEnum siteEnum => SiteEnum.WuxiaLNScantrad;
+        public SiteEnum SiteEnum => SiteEnum.WuxiaLNScantrad;
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(lienChapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
 
-                List<string> listeParagraphe = new List<string>();
+                List<string> listeParagraphe = new();
 
                 if (html)
                 {
@@ -57,10 +57,10 @@ namespace RecuperationDonnee.WuxiaLNScantrad
 
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(lienPagechapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var test = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/div/ul/li/a");
                 if (test == null)
@@ -76,10 +76,10 @@ namespace RecuperationDonnee.WuxiaLNScantrad
 
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 var htmlSite = client.DownloadString(LienRecuperationNovel);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var entetePage = doc.GetElementbyId("primary-menu");
                 // Récupération des séries
@@ -92,13 +92,13 @@ namespace RecuperationDonnee.WuxiaLNScantrad
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel informationNovel = new InformationNovel();
+            InformationNovel informationNovel = new();
 
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 var htmlSite = client.DownloadString(lienPageIntroduction);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
 
                 var listeBaliseDivTexte = doc.GetElementbyId("primary").SelectNodes("//div[@class='entry-content']");
@@ -117,9 +117,9 @@ namespace RecuperationDonnee.WuxiaLNScantrad
                         informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
                     }
                 }
-                Regex regexAuteur = new Regex(@"Auteur\(s\):(.*?)\n");
+                Regex regexAuteur = new(@"Auteur\(s\):(.*?)\n");
                 informationNovel.Auteur = regexAuteur.Match(elementContenantSynopsis).Groups[1].Value.Trim(' ');
-                Regex regexResume = new Regex(@"Synopsis :([\s\S]*)Chapitres disponibles", RegexOptions.IgnoreCase);
+                Regex regexResume = new(@"Synopsis :([\s\S]*)Chapitres disponibles", RegexOptions.IgnoreCase);
                 informationNovel.Resume = regexResume.Match(elementContenantSynopsis).Groups[1].Value;
                 if (string.IsNullOrEmpty(informationNovel.Resume))
                 {

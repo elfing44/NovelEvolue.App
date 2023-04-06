@@ -6,8 +6,8 @@ namespace NovelEvolue.Chapitre;
 
 public partial class SaisieListeChapitre : ContentPage
 {
-    ISite _site;
-    NovelView _novel;
+    private readonly ISite _site;
+    private readonly NovelView _novel;
     bool _triDescendant = false;
 
     public ObservableCollection<ChapitreView> ListeChapitreView
@@ -55,12 +55,12 @@ public partial class SaisieListeChapitre : ContentPage
         if (novel.ListeChapitre == null || !novel.ListeChapitre.Any())
         {
             novel.ListeChapitre = site.RecuperationListeChapitre(novelView.LienHtml).ToList();
-            App.Database.SauverNovel(novel, _site.siteEnum);
+            App.Database.SauverNovel(novel, _site.SiteEnum);
         }
         // Pour mettre a jour les novels déja récupérer avant la maj
         else if (novel.NombreChapitre == 0)
         {
-            App.Database.SauverNovel(novel, _site.siteEnum);
+            App.Database.SauverNovel(novel, _site.SiteEnum);
         }
 
         int i = 0;
@@ -97,7 +97,7 @@ public partial class SaisieListeChapitre : ContentPage
         ListeChapitre.IsRefreshing = true;
         Novel novel = App.Database.ChargerNovel(_novel.LienHtml);
         novel.ListeChapitre = _site.RecuperationListeChapitre(_novel.LienHtml).ToList();
-        App.Database.SauverNovel(novel, _site.siteEnum);
+        App.Database.SauverNovel(novel, _site.SiteEnum);
         ListeChapitreView.Clear();
         int i = 0;
         novel = App.Database.ChargerNovel(_novel.LienHtml);

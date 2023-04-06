@@ -34,7 +34,7 @@ namespace RecuperationDonnee.NovelDeGlace.Tests
         public void RecupererInformationNovelTest()
         {
             //https://noveldeglace.com/roman/monster-no-goshujin-sama-wn/
-            List<string> listeInfos = new List<string>();
+            List<string> listeInfos = new();
             IEnumerable<Novel> listeNovel = new NovelDeGlace().RecuperationListeNovel();
             foreach (Novel novel in listeNovel)
             {

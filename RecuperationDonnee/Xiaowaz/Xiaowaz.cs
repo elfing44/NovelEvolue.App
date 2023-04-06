@@ -19,11 +19,11 @@ namespace RecuperationDonnee.Xiaowaz
 
         public string LienRecuperationNovel => @"https://xiaowaz.fr/";
 
-        public SiteEnum siteEnum { get => SiteEnum.Xiaowaz; }
+        public SiteEnum SiteEnum { get => SiteEnum.Xiaowaz; }
 
         private const string _debutIdSpan = "more-";
 
-        public List<string> listeLienARetirer = new List<string>()
+        public List<string> listeLienARetirer = new()
         {
             "https://www.fictionpress.com/s/2961893/1/Mother-of-Learning",
             "http://www.wuxiaworld.com/bp-index/"
@@ -36,10 +36,10 @@ namespace RecuperationDonnee.Xiaowaz
         /// <returns>liste de chapitre</returns>
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPagechapitre);
             // Récupération de l'élément qui a pour id : lcp_instance_0 qui contient la liste de tous les chapitres
-            List<Chapitre> listeChapitre = new List<Chapitre>();
+            List<Chapitre> listeChapitre = new();
 
             var listeNodesChapitre = doc.GetElementbyId(_idElementListe);
             if (listeNodesChapitre != null)
@@ -82,8 +82,8 @@ namespace RecuperationDonnee.Xiaowaz
         /// <returns>liste de chapitre qui ne sont pas dans le sommaire</returns>
         private static List<Chapitre> RecuperationListeChapitreNonSommaire(Chapitre dernierChapitre)
         {
-            HtmlWeb web = new HtmlWeb();
-            List<Chapitre> listeChapitre = new List<Chapitre>();
+            HtmlWeb web = new();
+            List<Chapitre> listeChapitre = new();
             if (dernierChapitre != null)
             {
                 string lienChapitreSuivant = dernierChapitre.LientHtml;
@@ -146,7 +146,7 @@ namespace RecuperationDonnee.Xiaowaz
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienChapitre);
             var listeBaliseP = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p").Where(x => x.GetAttributeValue("class", string.Empty) != "post-meta");
 
@@ -154,7 +154,7 @@ namespace RecuperationDonnee.Xiaowaz
             // sur le chapitre 1 de TDG le span et au début du chapitre et pas au dessus du chapitre
             bool contientUnSpanMore = listeBaliseP.Where(x => x.FirstChild != null && x.FirstChild.Id.Contains(_debutIdSpan)).Any() && !listeBaliseP.Where(x => x.FirstChild != null && x.FirstChild.Id.Equals(_debutIdSpan + "9")).Any();
 
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             if (html)
             {
@@ -199,17 +199,17 @@ namespace RecuperationDonnee.Xiaowaz
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel informationNovel = new InformationNovel();
+            InformationNovel informationNovel = new();
             if (lienPageIntroduction == "https://xiaowaz.fr/articles/category/douluo-dalu/"
                 || lienPageIntroduction == "https://xiaowaz.fr/series-abandonnees/la-porte-de-la-chance/")
             {
                 return informationNovel;
             }
 
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPageIntroduction);
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes))
             {
@@ -238,10 +238,8 @@ namespace RecuperationDonnee.Xiaowaz
 
             informationNovel.Resume = string.Join(Environment.NewLine, listeParagraphe).Trim(Environment.NewLine.ToArray());
             var image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p/img");
-            if (image == null)
-                image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h4/img");
-            if (image == null)
-                image = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h1/img");
+            image ??= doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h4/img");
+            image ??= doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/h1/img");
             informationNovel.LienImage = image.Select(i => i.GetAttributeValue("src", string.Empty)).FirstOrDefault();
 
             informationNovel.Auteur = WebUtility.HtmlDecode(RecupererAuteur(doc.Text));
@@ -249,9 +247,9 @@ namespace RecuperationDonnee.Xiaowaz
             return informationNovel;
         }
 
-        private string RecupererAuteur(string doc)
+        private static string RecupererAuteur(string doc)
         {
-            Regex regexAuteur = new Regex(@"Écrit par&nbsp;(.*?)\.");
+            Regex regexAuteur = new(@"Écrit par&nbsp;(.*?)\.");
             if (!string.IsNullOrEmpty(regexAuteur.Match(doc).Groups[1].Value))
             {
                 return regexAuteur.Match(doc).Groups[1].Value;
@@ -324,9 +322,9 @@ namespace RecuperationDonnee.Xiaowaz
             return string.Empty;
         }
 
-        private string RecupererTraducteur(string doc)
+        private static string RecupererTraducteur(string doc)
         {
-            Regex regexTraducteur = new Regex(@"Traduction par&nbsp;(.*?)\.");
+            Regex regexTraducteur = new(@"Traduction par&nbsp;(.*?)\.");
             if (!string.IsNullOrEmpty(regexTraducteur.Match(doc).Groups[1].Value))
             {
                 return regexTraducteur.Match(doc).Groups[1].Value;

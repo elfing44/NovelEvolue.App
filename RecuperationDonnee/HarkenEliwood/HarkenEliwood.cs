@@ -11,20 +11,20 @@ namespace RecuperationDonnee.HarkenEliwood
     {
         public string LienRecuperationNovel => @"https://harkeneliwood.wordpress.com/projets/";
 
-        public SiteEnum siteEnum { get => SiteEnum.HarkenEliwwoof; }
+        public SiteEnum SiteEnum { get => SiteEnum.HarkenEliwwoof; }
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 var htmlSite = client.DownloadString(lienChapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var listeBaliseDivTitre = doc.GetElementbyId("content").SelectNodes("//h1[@class='entry-title']");
                 var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
 
-                List<string> listeParagraphe = new List<string>();
+                List<string> listeParagraphe = new();
 
                 if (html)
                 {
@@ -61,11 +61,11 @@ namespace RecuperationDonnee.HarkenEliwood
 
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 var htmlSite = client.DownloadString(lienPagechapitre);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var contenantListeChapitre = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']/p/a").Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && !x.InnerText.Contains("https://") && !x.InnerText.Contains("http://"));
                 return contenantListeChapitre.Where(x => !string.IsNullOrEmpty(System.Net.WebUtility.HtmlDecode(x.InnerText))).Select(x => new Chapitre() { Libelle = System.Net.WebUtility.HtmlDecode(x.InnerText), LientHtml = x.GetAttributeValue("Href", string.Empty) });
@@ -74,11 +74,11 @@ namespace RecuperationDonnee.HarkenEliwood
 
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 var htmlSite = client.DownloadString(LienRecuperationNovel);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
                 var contenantListeNovel = doc.GetElementbyId("content");
                 var listeNovel = contenantListeNovel.SelectNodes("//*[@class='entry-content']").Descendants().Where(x => x.GetAttributeValue("Href", string.Empty).Length > 0 && x.InnerText != "Twitter" && x.InnerText != "Facebook");
@@ -88,13 +88,13 @@ namespace RecuperationDonnee.HarkenEliwood
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel infos = new InformationNovel();
+            InformationNovel infos = new();
 
-            using (WebClient client = new WebClient())
+            using (WebClient client = new())
             {
                 client.Encoding = System.Text.Encoding.UTF8;
                 var htmlSite = client.DownloadString(lienPageIntroduction);
-                HtmlDocument doc = new HtmlDocument();
+                HtmlDocument doc = new();
                 doc.LoadHtml(htmlSite);
 
                 var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content']");
@@ -119,7 +119,7 @@ namespace RecuperationDonnee.HarkenEliwood
 
         private static string RecupererAuteur(string text)
         {
-            Regex regexAuteur = new Regex(@"Auteur :(.*?)" + Environment.NewLine);
+            Regex regexAuteur = new(@"Auteur :(.*?)" + Environment.NewLine);
             if (!string.IsNullOrEmpty(regexAuteur.Match(text).Groups[1].Value))
             {
                 return regexAuteur.Match(text).Groups[1].Value;
@@ -141,7 +141,7 @@ namespace RecuperationDonnee.HarkenEliwood
 
         private static string RecupererResume(string text)
         {
-            Regex regexResume = new Regex(@"Synopsis :([\s\S]*)Traduction anglaise", RegexOptions.IgnoreCase);
+            Regex regexResume = new(@"Synopsis :([\s\S]*)Traduction anglaise", RegexOptions.IgnoreCase);
             string resume = regexResume.Match(text).Groups[1].Value;
             if (string.IsNullOrEmpty(resume))
             {

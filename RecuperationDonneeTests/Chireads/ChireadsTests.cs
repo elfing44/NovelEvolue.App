@@ -11,7 +11,7 @@ namespace RecuperationDonnee.Chireads.Tests
         [TestMethod]
         public void RecuperationListeNovelTest()
         {
-            List<string> listeLienErreur = new List<string>();
+            List<string> listeLienErreur = new();
             IEnumerable<Novel> listeNovel = new Chireads().RecuperationListeNovel();
             Assert.AreEqual(91, listeNovel.Count());
             foreach (Novel novel in listeNovel)

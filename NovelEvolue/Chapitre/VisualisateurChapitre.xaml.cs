@@ -6,10 +6,10 @@ namespace NovelEvolue.Chapitre;
 
 public partial class VisualisateurChapitre : ContentPage
 {
-    int _indexElement;
-    ObservableCollection<ChapitreView> _listeChapitre;
-    ISite _site;
-    NovelView _novel;
+    private readonly int _indexElement;
+    private readonly ObservableCollection<ChapitreView> _listeChapitre;
+    private readonly ISite _site;
+    private readonly NovelView _novel;
 
 
     public VisualisateurChapitre(string texte, ObservableCollection<ChapitreView> chapitreViews, int indexElement, ISite site, NovelView novel, string titre)

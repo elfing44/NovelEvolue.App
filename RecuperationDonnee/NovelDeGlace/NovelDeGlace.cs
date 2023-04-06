@@ -11,11 +11,11 @@ namespace RecuperationDonnee.NovelDeGlace
     public class NovelDeGlace : ISite
     {
         public string LienRecuperationNovel => @"https://noveldeglace.com/roman/";
-        public SiteEnum siteEnum { get => SiteEnum.NovelDeGlace; }
+        public SiteEnum SiteEnum { get => SiteEnum.NovelDeGlace; }
 
         public string RecuperationChapitre(string lienChapitre, bool html)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienChapitre);
             var listeBaliseDivTome = doc.GetElementbyId("content").SelectNodes("//div[@class='entry-content-chapitre chapter-inner chapter-content']/div[@class='content-tome']");
             if (listeBaliseDivTome == null)
@@ -24,7 +24,7 @@ namespace RecuperationDonnee.NovelDeGlace
             }
             IEnumerable<HtmlNode> listebalise = listeBaliseDivTome.SelectMany(x => x.ChildNodes);
 
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             if (html)
             {
@@ -58,7 +58,7 @@ namespace RecuperationDonnee.NovelDeGlace
 
         public IEnumerable<Chapitre> RecuperationListeChapitre(string lienPagechapitre)
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPagechapitre);
             var contenantListeChapitre = doc.GetElementbyId("wrapper");
             var listeChapitre = contenantListeChapitre.SelectNodes("//div[@class='su-column-inner su-clearfix']/ul/li[@class='chpt']").Nodes().Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty);
@@ -67,7 +67,7 @@ namespace RecuperationDonnee.NovelDeGlace
 
         public IEnumerable<Novel> RecuperationListeNovel()
         {
-            HtmlWeb web = new HtmlWeb();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(LienRecuperationNovel);
             var contenantListeNovel = doc.GetElementbyId("content");
             var listeNovel = contenantListeNovel.SelectNodes("//article/div[@class='entry-summary']/div[@class='romans']/div[@class='info-romans']/h2[@class='entry-title']").Descendants().Where(x => x.GetAttributeValue("Href", string.Empty) != string.Empty);
@@ -76,11 +76,11 @@ namespace RecuperationDonnee.NovelDeGlace
 
         public InformationNovel RecupererInformationNovel(string lienPageIntroduction)
         {
-            InformationNovel informationNovel = new InformationNovel();
-            HtmlWeb web = new HtmlWeb();
+            InformationNovel informationNovel = new();
+            HtmlWeb web = new();
             HtmlDocument doc = web.Load(lienPageIntroduction);
             var listeBaliseDivTexte = doc.GetElementbyId("content").SelectNodes("//div[@class='content']");
-            List<string> listeParagraphe = new List<string>();
+            List<string> listeParagraphe = new();
 
             foreach (var balise in listeBaliseDivTexte.SelectMany(x => x.ChildNodes))
             {
