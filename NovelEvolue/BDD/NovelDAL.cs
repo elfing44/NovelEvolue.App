@@ -14,6 +14,18 @@ namespace NovelEvolue.BDD
             _database.CreateTable<ChapitreBDD>();
         }
 
+        /// <summary>
+        /// Clot la base de donnée
+        /// </summary>
+        public void Close()
+        {
+            _database.Close();
+            EstClose = true;
+        }
+
+        // indique si la base de donné est close
+        public bool EstClose { get; private set; }
+
         public void SauverNovel(Novel novel, SiteEnum siteEnum)
         {
             //Transformation de  Novel en novel BDD

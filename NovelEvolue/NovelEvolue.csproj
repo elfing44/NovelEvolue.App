@@ -51,6 +51,7 @@
 	  <None Remove="Resources\Images\Actualiser.png" />
 	  <None Remove="Resources\Images\chireads.png" />
 	  <None Remove="Resources\Images\Coche.png" />
+	  <None Remove="Resources\Images\export.png" />
 	  <None Remove="Resources\Images\harkeneliwood.png" />
 	  <None Remove="Resources\Images\novelglace.png" />
 	  <None Remove="Resources\Images\Telecharger.png" />
@@ -59,6 +60,7 @@
 	  <None Remove="Resources\Images\wuxialn.png" />
 	  <None Remove="Resources\Images\xiaowaz.png" />
 	  <MauiIcon Include="Resources\AppIcon\icon.png" />
+	  <PackageReference Include="CommunityToolkit.Maui" Version="5.0.0" />
 	  <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
 	  <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
 	  <PackageReference Include="SQLiteNetExtensions" Version="2.1.0" />

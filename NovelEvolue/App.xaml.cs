@@ -16,6 +16,11 @@ public partial class App : Application
         get
         {
             _database ??= new NovelDAL(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Novel.db3"));
+            // si on a du fermer la base de donnée on ce reconnecte
+            if (_database.EstClose)
+            {
+                _database = new NovelDAL(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Novel.db3"));
+            }
             return _database;
         }
     }
