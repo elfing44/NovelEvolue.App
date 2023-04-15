@@ -17,7 +17,8 @@
         <StackLayout>
             <ListView x:Name="ListeNovelView"
                       SelectionMode="Single"
-                      HasUnevenRows="True">
+                      HasUnevenRows="True"
+                      CachingStrategy="RecycleElement">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell >

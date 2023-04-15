@@ -23,7 +23,8 @@
             <ListView x:Name="ListeChapitre"
                       SelectionMode="Single"
                       ItemsSource="{Binding }"
-                      HasUnevenRows="True">
+                      HasUnevenRows="True"
+                      CachingStrategy="RecycleElement">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
