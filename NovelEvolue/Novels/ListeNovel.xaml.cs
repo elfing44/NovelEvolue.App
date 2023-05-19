@@ -4,6 +4,7 @@ using RecuperationDonnee;
 using RecuperationDonnee.Chireads;
 using RecuperationDonnee.HarkenEliwood;
 using RecuperationDonnee.NovelDeGlace;
+using RecuperationDonnee.PizzaTranslation;
 using RecuperationDonnee.WarriorLegendTrad;
 using RecuperationDonnee.WuxiaLNScantrad;
 using RecuperationDonnee.Xiaowaz;
@@ -91,6 +92,9 @@ public partial class ListeNovel : ContentPage
                 break;
             case SiteEnum.WarriorLegendTrad:
                 site = new WarriorLegendTrad();
+                break;
+            case SiteEnum.PizzaTranslaion:
+                site = new PizzaTranslation();
                 break;
         }
         return site;

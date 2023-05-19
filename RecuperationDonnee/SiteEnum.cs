@@ -8,5 +8,6 @@
         HarkenEliwwoof,
         WuxiaLNScantrad,
         WarriorLegendTrad,
+        PizzaTranslaion
     }
 }
